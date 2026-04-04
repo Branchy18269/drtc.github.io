@@ -1,0 +1,697 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request a Quote | Done Right Tech Company</title>
+    <link rel="icon" href="../../images/favicon.png" type="image/png">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Sora:wght@400;500;600;700&display=swap");
+
+        /** Base **/
+        *, ::before, ::after { box-sizing: border-box; }
+        * { border: 0; margin: 0; padding: 0; }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            font-optical-sizing: auto;
+            font-style: normal;
+            background: linear-gradient(180deg, rgba(0,0,0,0.82) 0%, rgba(0,26,77,0.78) 50%, rgba(13,13,43,0.84) 100%), url('../../images/bg-quote.svg') center / cover no-repeat;
+            background-attachment: fixed;
+            color: rgba(255, 255, 255, 0.86);
+            height: 100%;
+        }
+
+        html { height: 100%; }
+
+        button, input, textarea, select {
+            font-family: inherit; font-size: 100%; line-height: inherit; color: inherit;
+            background: transparent; 
+        }
+
+        a { color: inherit; text-decoration: none; }
+        a:focus-visible, button:focus-visible, .navLink:focus-visible, .primary-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 3px;
+        }
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 16px;
+            z-index: 1000;
+            padding: 12px 20px;
+            background: var(--primary);
+            color: #000;
+            font-weight: 700;
+            border-radius: 8px;
+            transition: top 0.2s ease;
+        }
+        .skip-link:focus { top: 16px; }
+
+        /* --- THEME VARIABLES --- */
+        :root {
+            --bg: #07080d;
+            --panel: rgba(255, 255, 255, 0.06);
+            --panel2: rgba(255, 255, 255, 0.08);
+            --text: rgba(255, 255, 255, 0.86);
+            --muted: rgba(255, 255, 255, 0.62);
+            --border: rgba(255, 255, 255, 0.12);
+            --shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+            --primary: #4facfe;
+            --primary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, .25);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            transition: transform 240ms ease;
+        }
+
+        .navbar.isHidden { transform: translateY(-110%); }
+
+        .navInner {
+            max-width: 1200px; margin: auto; padding: 14px 18px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .brand { display: flex; align-items: center; font-weight: 700; font-size: 1.25rem; }
+        .brand img { max-height: 40px; width: auto; margin-right: 10px; }
+        .brand span { color: #fff; }
+
+        .navLinks { display: flex; align-items: center; gap: 6px; }
+
+        .navLink {
+            padding: 10px 14px; border-radius: 12px; color: var(--muted);
+            font-size: 15px; font-weight: 500; transition: .18s; cursor: pointer; white-space: nowrap;
+            background: transparent;
+        }
+        .navLink:hover, .navLink.active { color: var(--text); background: var(--panel); }
+
+        .navLinkBtn { display: inline-flex; align-items: center; gap: 6px; }
+        .chev { font-size: 10px; opacity: .8; transition: transform 0.2s ease; }
+        
+        .cta {
+            background: var(--panel2); border: 1px solid var(--border); margin-left: 8px;
+        }
+        .cta:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); }
+
+        /* Dropdowns */
+        .navItem { position: relative; }
+        
+        /* The Main Dropdown Container */
+        .dropdown {
+            position: absolute;
+            top: 100%; /* Align to bottom of parent */
+            margin-top: 4px; /* Visual gap */
+            left: 0;
+            min-width: 240px;
+            background: #12141e;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            padding: 6px;
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+            display: flex; flex-direction: column; gap: 2px;
+            /* Transition moved to media query for desktop sticky effect */
+        }
+
+        /* Submenus (Flyout to the right) */
+        .submenu {
+            position: absolute;
+            top: -6px; 
+            left: 100%; 
+            margin-left: 4px;
+            min-width: 220px;
+            background: #12141e;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            padding: 6px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(-10px);
+            display: flex; flex-direction: column; gap: 2px;
+            /* Transition moved to media query */
+        }
+
+        /* --- DESKTOP HOVER LOGIC (The "Sticky" Fix) --- */
+        @media (min-width: 641px) {
+            
+            /* 1. Add Transitions with Delay (The "Grace Period") */
+            /* When mouse leaves, wait 0.15s before hiding */
+            .dropdown, .submenu {
+                transition: opacity 0.2s ease 0.15s, transform 0.2s ease 0.15s, visibility 0s linear 0.15s;
+            }
+
+            /* When hovering, show immediately (0s delay) */
+            .hasDropdown:hover .dropdown,
+            .hasDropdown:focus-within .dropdown,
+            .dropItem.hasSubmenu:hover .submenu,
+            .dropItem.hasSubmenu:focus-within .submenu {
+                opacity: 1; 
+                pointer-events: auto; 
+                transform: translateY(0);
+                transition: opacity 0.2s ease 0s, transform 0.2s ease 0s;
+            }
+
+            .dropItem.hasSubmenu:hover .submenu {
+                transform: translateX(0);
+            }
+
+            .hasDropdown:hover .chev { transform: rotate(180deg); }
+
+
+            /* 2. Add Invisible Bridges (Fill the Gaps) */
+            
+            /* Bridge for Top-Level Dropdown */
+            .dropdown::before {
+                content: '';
+                position: absolute;
+                top: -20px; /* Stretch up to touch the nav button */
+                left: 0;
+                width: 100%;
+                height: 20px;
+                background: transparent; /* Invisible */
+            }
+
+            /* Bridge for Submenu */
+            .submenu::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -20px; /* Stretch left to touch the parent item */
+                width: 20px;
+                height: 100%;
+                background: transparent; /* Invisible */
+            }
+        }
+
+        .dropItem, .dropItemBtn {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 12px; border-radius: 10px; color: var(--muted);
+            font-size: 14px; transition: .16s; text-align: left; width: 100%;
+            background: transparent; border: none; cursor: pointer; font-family: inherit;
+        }
+
+        .dropItem:hover, .dropItemBtn:hover { background: var(--panel); color: var(--text); }
+        .dropItem.hasSubmenu { position: relative; padding: 0; }
+        .hasSubmenu .mainBtn { padding: 10px 12px; width: 100%; }
+
+        .arrow { font-size: 14px; line-height: 1; }
+
+        .subItem {
+            display: block; padding: 10px 12px; border-radius: 10px;
+            color: var(--muted); font-size: 14px; transition: .16s;
+        }
+        .subItem:hover { background: var(--panel); color: var(--text); }
+
+        /* Hamburger */
+        .hamburger {
+            display: none; flex-direction: column; justify-content: center; gap: 6px;
+            cursor: pointer; background: none; border: none; padding: 10px; z-index: 101;
+        }
+        .hamburger span {
+            width: 24px; height: 2px; background: var(--text);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 4px;
+        }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        /* Mobile Styles - UPDATED FIX */
+        @media (max-width: 640px) {
+            .navbar { background: #000; }
+            .hamburger { display: flex; }
+            .navLinks {
+                position: absolute; top: 100%; left: 0; right: 0;
+                background: #000; border-bottom: 1px solid var(--border);
+                flex-direction: column; align-items: flex-start;
+                padding: 10px 16px 24px 16px; gap: 8px;
+                opacity: 0; visibility: hidden; transform: translateY(-10px);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                max-height: 85vh; overflow-y: auto;
+            }
+            .navLinks.active {
+                opacity: 1; visibility: visible; transform: translateY(0);
+                box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            }
+            .navLink, .navItem { width: 100%; }
+            .cta { margin-left: 0; margin-top: 8px; text-align: center; justify-content: center; }
+            
+            /* Mobile Dropdowns */
+            .dropdown {
+                position: static; width: 100%; opacity: 1; transform: none; pointer-events: auto;
+                background: rgba(255, 255, 255, 0.03); border: none; padding: 0; margin-top: 5px;
+                display: none; box-shadow: none;
+            }
+            
+            /* Mobile Nested Submenus - Indentation and Tree lines */
+            .submenu {
+                position: static; width: auto; opacity: 1; transform: none; pointer-events: auto;
+                background: transparent; /* Transparent for cleaner look */
+                border: none; 
+                box-shadow: none; display: none;
+                
+                margin-left: 12px;
+                padding-left: 12px;
+                border-left: 1px solid rgba(255, 255, 255, 0.1);
+                margin-top: 2px;
+            }
+
+            /* Stack nested items vertically instead of flexing horizontally */
+            .dropItem.hasSubmenu {
+                display: block; 
+            }
+
+            .navItem.open > .dropdown { display: flex; animation: slideDown 0.2s ease forwards; }
+            .dropItem.open > .submenu { display: flex; }
+            
+            .navLinkBtn, .dropItemBtn { justify-content: space-between; }
+            .navItem.open .chev { transform: rotate(180deg); }
+            .dropItem.open .arrow { transform: rotate(90deg); }
+            
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-5px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        }
+
+        /* ================= CONTACT LAYOUT ================= */
+        .contact-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+            gap: 28px;
+            align-items: start;
+            margin-top: 20px;
+        }
+
+        .form-wrapper {
+            background: rgba(18, 20, 30, 0.6); backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px; padding: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            max-width: none; margin: 0;
+        }
+
+        .form-wrapper h2 {
+            font-family: 'Sora', system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+            margin-bottom: 18px;
+            color: #fff;
+        }
+
+        .fs-form { display: grid; row-gap: 1.5rem; }
+        .fs-field { display: flex; flex-direction: column; row-gap: 0.5rem; }
+        .fs-label {
+            color: var(--text); display: block; font-size: 0.9rem;
+            font-weight: 600; letter-spacing: 0.5px; margin-left: 4px;
+        }
+        .fs-input, .fs-textarea {
+            appearance: none; background-color: rgba(0, 0, 0, 0.3); border: 1px solid var(--border);
+            border-radius: 12px; color: #fff; font-size: 1rem; line-height: 1.5rem;
+            outline: none; padding: 12px 16px; width: 100%; transition: all 0.3s ease;
+        }
+        .fs-textarea { resize: vertical; min-height: 120px; }
+        .fs-input:focus, .fs-textarea:focus {
+            background-color: rgba(0, 0, 0, 0.5); border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.15);
+        }
+        .fs-button {
+            background: var(--primary-gradient); border: none; border-radius: 12px;
+            color: #000; cursor: pointer; font-size: 1rem; font-weight: 800;
+            line-height: 1.5rem; padding: 14px 28px; width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s; text-transform: uppercase;
+            letter-spacing: 1px; margin-top: 10px;
+        }
+        .fs-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(79, 172, 254, 0.4); }
+        .fs-button:active { transform: translateY(0); }
+
+        /* ================= CONTACT ACTIONS ================= */
+        .call-section {
+            margin: 0;
+            text-align: left;
+            padding: 24px;
+            background: var(--panel);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 96px;
+        }
+        .call-section h2 {
+            font-family: 'Sora', system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            margin-bottom: 10px;
+            font-size: 1.35rem;
+            color: #fff;
+        }
+        .call-section p {
+            color: var(--muted);
+            margin-bottom: 16px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .call-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: transparent;
+            border: 2px solid rgba(79, 172, 254, 0.5);
+            color: #fff;
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .call-btn:hover {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .email-cta {
+            margin-top: 14px;
+            display: block;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .email-cta:hover {
+            background: rgba(255, 255, 255, 0.14);
+            transform: translateY(-2px);
+        }
+
+        .team-email-grid {
+            margin-top: 14px;
+            display: grid;
+            gap: 10px;
+        }
+
+        /* ================= PAGE CONTENT ================= */
+        .page { padding-top: 80px; min-height: 100vh; }
+        .container { max-width: 1200px; margin: auto; padding: 24px 18px; }
+        .hero { padding: 60px 0; text-align: center; }
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 56px); margin: 0 0 10px 0;
+            background: linear-gradient(to right, #fff, #aaa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            color: var(--muted); font-size: 1.1rem; max-width: 600px;
+            margin: 20px auto 40px auto; line-height: 1.6;
+        }
+
+        @media (max-width: 960px) {
+            .contact-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .call-section {
+                position: static;
+            }
+        }
+
+        </style>
+
+    <link rel="stylesheet" href="../../css/global-spice.css?v=9">
+
+    <link rel="stylesheet" href="../../css/footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<header class="navbar" id="navbar">
+  <div class="navInner">
+    <a class="brand" href="../../index.html">
+        <img src="../../images/DRTC-Logo.png" alt="DRTC">
+        <span style="display:none;">DRTC</span>
+    </a>
+
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="navLinks" aria-label="Primary navigation" id="navLinks">
+      <a class="navLink" href="../../index.html">Home</a>
+      <a class="navLink" href="../../pages/company/about.html">About Us</a>
+
+      <div class="navItem hasDropdown">
+        <a class="navLink navLinkBtn" href="../../pages/services/services.html" aria-haspopup="true">
+          Services
+                    <span class="chev">▾</span>
+        </a>
+        
+        <div class="dropdown" role="menu" aria-label="Services menu">
+
+          <div class="dropItem hasSubmenu" role="none">
+            <a class="dropItemBtn mainBtn" href="../../pages/services/services.html#ds-main" aria-haspopup="true">
+              Digital Services 
+                            <span class="arrow">›</span>
+            </a>
+            <div class="submenu" role="menu">
+              <a class="subItem" href="../../pages/services/services.html?open=web-development" role="menuitem">Web Development</a>
+              <a class="subItem" href="../../pages/services/services.html?open=infrastructure-hosting" role="menuitem">Infrastructure Hosting</a>
+              <a class="subItem" href="../../pages/services/services.html?open=server-configuration" role="menuitem">Server Configuration</a>
+            </div>
+          </div>
+
+          <div class="dropItem hasSubmenu" role="none">
+            <a class="dropItemBtn mainBtn" href="../../pages/services/services.html#rs-main" aria-haspopup="true">
+              Residential Services 
+                            <span class="arrow">›</span>
+            </a>
+            <div class="submenu" role="menu">
+              <a class="subItem" href="../../pages/services/services.html?open=pc-building" role="menuitem">PC Planning & Building</a>
+              <a class="subItem" href="../../pages/services/services.html?open=hardware-support" role="menuitem">Hardware Support & Repair</a>
+              <a class="subItem" href="../../pages/services/services.html?open=software-support" role="menuitem">Software Installation & Support</a>
+            </div>
+          </div>
+
+          <div class="dropItem hasSubmenu" role="none">
+            <a class="dropItemBtn mainBtn" href="../../pages/services/services.html#en-main" aria-haspopup="true">
+              Networking
+                            <span class="arrow">›</span>
+            </a>
+            <div class="submenu" role="menu">
+              <a class="subItem" href="../../pages/services/services.html?open=enterprise-networking" role="menuitem">Enterprise Networking</a>
+              <a class="subItem" href="../../pages/services/services.html?open=home-networking" role="menuitem">Home Networking</a>
+              <a class="subItem" href="../../pages/services/services.html?open=voip-setup" role="menuitem">VoIP Setup & Installation</a>
+            </div>
+          </div>
+
+        </div> </div>
+
+      <a class="navLink" href="../../pages/support/support.html">Support</a>
+        <div class="navItem hasDropdown">
+            <a class="navLink navLinkBtn cta active" href="../../pages/company/contact.html" aria-haspopup="true">
+                Contact
+                <span class="chev">▾</span>
+            </a>
+            <div class="dropdown" role="menu" aria-label="Contact menu">
+                <a class="dropItem" href="../../pages/company/contact.html" role="menuitem">Contact Us</a>
+                <a class="dropItem" href="../../pages/company/request-a-quote.html" role="menuitem">Request a Quote</a>
+            </div>
+        </div>
+    </nav>
+  </div>
+</header>
+
+<main class="page" id="main-content">
+  <section class="hero" id="home">
+    <div class="container">
+                <h1>Request a Business Quote</h1>
+                    <p>Tell us about your business requirements and project scope. Our team will prepare a tailored quote for your organization.</p>
+
+          <div class="contact-layout">
+                <div class="form-wrapper">
+                     <h2>Business Project Details</h2>
+                     <form action="https://formspree.io/f/xqeqoepv" class="fs-form" target="_top" method="POST">
+                      <div class="fs-field">
+                          <label class="fs-label" for="name">Primary Contact Name</label>
+                          <input class="fs-input" id="name" name="name" required placeholder="FirstName LastName" />
+                      </div>
+                      <div class="fs-field">
+                          <label class="fs-label" for="company">Business Name</label>
+                          <input class="fs-input" id="company" name="company" required placeholder="Your Company Name" />
+                      </div>
+                      <div class="fs-field">
+                          <label class="fs-label" for="email">Business Email Address</label>
+                          <input class="fs-input" id="email" name="email" required placeholder="youremail@email.com" />
+                      </div>
+                      <div class="fs-field">
+                          <label class="fs-label" for="number">Business Phone Number</label>
+                          <input class="fs-input" id="number" name="number" required placeholder="+1 (234) 567-8910" />
+                      </div>
+                      <div class="fs-field">
+                          <label class="fs-label" for="service">Service Needed</label>
+                          <input class="fs-input" id="service" name="service" required placeholder="Web Development, Networking, IT Support, etc." />
+                      </div>
+                      <div class="fs-field">
+                          <label class="fs-label" for="message">Project Scope</label>
+                          <textarea class="fs-textarea" id="message" name="message" required placeholder="Tell us about your goals, timeline, and requirements."></textarea>
+                      </div>
+                      <div class="fs-button-group">
+                          <button class="fs-button" type="submit">Send Quote Request</button>
+                      </div>
+                     </form>
+                </div>
+
+                <aside class="call-section" aria-label="Contact options">
+                     <h2>Business Contact Options</h2>
+                     <p>Use the main inbox or contact a team member directly for project and contract inquiries.</p>
+                     <a href="tel:+19029200180" class="call-btn">
+                          <i class="fa-solid fa-phone"></i>
+                          Call Us: (902) 920-0180
+                     </a>
+                    <a href="mailto:contact@drtc.net?subject=Quote%20Request" class="email-cta">Email Main Inbox</a>
+                    <div class="team-email-grid" aria-label="Team email actions">
+                        <a href="mailto:willh@drtc.net?subject=Quote%20Request" class="email-cta">Email Will Hyndman</a>
+                        <a href="mailto:andrev@drtc.net?subject=Quote%20Request" class="email-cta">Email Andrew Veinotte</a>
+                        <a href="mailto:lelanj@drtc.net?subject=Quote%20Request" class="email-cta">Email Leland Jensen</a>
+                        <a href="mailto:chloer@drtc.net?subject=Quote%20Request" class="email-cta">Email Chloe Rodgerson</a>
+                    </div>
+                </aside>
+          </div>
+
+    </div>
+  </section>
+</main>
+
+<hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 0;">
+
+<footer style="padding: 56px 18px 0; color: rgba(255,255,255,0.55); font-size: 0.9rem; font-family: 'DM Sans', system-ui, sans-serif;">
+    <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 60px 80px; padding-bottom: 48px;">
+
+        <div>
+            <h4 style="color: #fff; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 20px; opacity: 0.9;">Company</h4>
+            <a href="../../index.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-house" style="font-size:0.85rem;width:14px;text-align:center;"></i>Home</a>
+            <a href="../../pages/company/about.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-circle-info" style="font-size:0.85rem;width:14px;text-align:center;"></i>About Us</a>
+            <a href="../../pages/company/contact.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-envelope" style="font-size:0.85rem;width:14px;text-align:center;"></i>Contact Us</a>
+            <a href="../../pages/company/request-a-quote.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-file-invoice-dollar" style="font-size:0.85rem;width:14px;text-align:center;"></i>Request a Quote</a>
+        </div>
+
+        <div>
+            <h4 style="color: #fff; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 20px; opacity: 0.9;">Support</h4>
+            <a href="../../pages/support/support.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-headset" style="font-size:0.85rem;width:14px;text-align:center;"></i>Support Portal</a>
+            <a href="../../pages/company/request-a-quote.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-paper-plane" style="font-size:0.85rem;width:14px;text-align:center;"></i>Submit a Request</a>
+        </div>
+
+        <div>
+            <h4 style="color: #fff; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 20px; opacity: 0.9;">Social</h4>
+            <a href="https://www.instagram.com/donerighttechco" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-brands fa-instagram" style="font-size:0.85rem;width:14px;text-align:center;"></i>Instagram</a>
+            <a href="https://x.com/donerighttechco" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-brands fa-x-twitter" style="font-size:0.85rem;width:14px;text-align:center;"></i>X</a>
+            <a href="https://www.tiktok.com/@donerighttechco" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-brands fa-tiktok" style="font-size:0.85rem;width:14px;text-align:center;"></i>TikTok</a>
+            <a href="https://bsky.app/profile/done-righttechco.bsky.social" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-brands fa-bluesky" style="font-size:0.85rem;width:14px;text-align:center;"></i>BlueSky</a>
+        </div>
+
+    </div>
+    <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 0 -18px; padding: 20px 18px 28px; text-align: center; font-size: 0.82rem; color: rgba(255,255,255,0.35);">
+        <span>&copy; 2026 Done Right Tech Company. All rights reserved.</span><span style="margin: 0 10px;">&middot;</span><span>Hosted by IIS &middot; Made by Done Right Tech Company</span>
+    </div>
+</footer>
+
+<script>
+    /* ================= NAVBAR LOGIC ================= */
+    (() => {
+        const navbar = document.getElementById("navbar");
+        let lastY = window.scrollY;
+        let ticking = false;
+        const THRESH = 10;
+
+        function update() {
+            const y = window.scrollY;
+            const diff = y - lastY;
+            if (y <= 10) navbar.classList.remove("isHidden");
+            else if (diff > 10) navbar.classList.add("isHidden");
+            else if (diff < -10) navbar.classList.remove("isHidden");
+            lastY = y;
+            ticking = false;
+        }
+
+        window.addEventListener("scroll", () => {
+            if (!ticking) {
+                requestAnimationFrame(update);
+                ticking = true;
+            }
+        }, { passive: true });
+    })();
+
+    /* ================= MOBILE MENU LOGIC ================= */
+    (() => {
+        const hamburger = document.getElementById("hamburger");
+        const navLinks = document.getElementById("navLinks");
+        const navbar = document.getElementById("navbar");
+        
+        hamburger.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isActive = hamburger.classList.toggle("active");
+            navLinks.classList.toggle("active");
+            hamburger.setAttribute("aria-expanded", isActive);
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!navbar.contains(e.target) && navLinks.classList.contains("active")) {
+                hamburger.classList.remove("active");
+                navLinks.classList.remove("active");
+                hamburger.setAttribute("aria-expanded", false);
+            }
+        });
+
+        // 1. Handle Top-Level Dropdowns
+        document.querySelectorAll('.hasDropdown > .navLinkBtn').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                if (window.innerWidth <= 640) {
+                    e.preventDefault();
+                    const parent = toggle.parentElement;
+                    document.querySelectorAll('.navItem.hasDropdown.open').forEach(item => {
+                        if (item !== parent) item.classList.remove('open');
+                    });
+                    parent.classList.toggle('open');
+                }
+            });
+        });
+
+        // 2. Handle Nested Submenus
+        document.querySelectorAll('.hasSubmenu > .mainBtn').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const parent = toggle.parentElement;
+                parent.classList.toggle('open');
+            });
+        });
+    })();
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

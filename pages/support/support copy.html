@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Portal | Done Right Tech Company</title>
+    <link rel="stylesheet" href="../../css/global-spice.css?v=9">
+    <style>
+        .support-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .support-box {
+            background: #0f121a;
+            border: 1px solid rgba(79, 172, 254, 0.4);
+            border-radius: 16px;
+            padding: 50px;
+            max-width: 600px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 40px rgba(79, 172, 254, 0.1);
+        }
+        .support-box h1 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+            -webkit-text-fill-color: #fff !important;
+        }
+        .support-box p {
+            color: #b0bec5;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .status-badge {
+            display: inline-block;
+            background: rgba(234, 0, 42, 0.1);
+            color: #ea002a;
+            border: 1px solid rgba(234, 0, 42, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        .quick-links {
+            margin-top: 30px;
+        }
+
+        .quick-links-title {
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .quick-links-grid {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .quick-link {
+            color: #d7e3ea;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 999px;
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .quick-link:hover {
+            color: #fff;
+            border-color: rgba(79, 172, 254, 0.45);
+            background: rgba(79, 172, 254, 0.08);
+        }
+    </style>
+
+    <link rel="stylesheet" href="../../css/footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <!-- Back Button / Simple Nav -->
+    <div style="position: absolute; top: 30px; left: 30px;">
+        <a href="../../index.html" class="primary-btn" style="padding: 10px 20px; text-decoration: none; display: inline-block;">&larr; Return Home</a>
+    </div>
+
+    <div class="support-container">
+        <div class="support-box reveal">
+            <div class="status-badge">System Upgrade in Progress</div>
+            <h1>Support Portal Maintenance</h1>
+            <p>We are currently upgrading our client support portal to serve you better. The new system will feature integrated ticketing, live chat options, and an expansive knowledge base.</p>
+            <p>If you require immediate technical assistance, please do not hesitate to contact our team directly by phone or email.</p>
+            
+            <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="tel:+19029200180" class="primary-btn" style="text-decoration: none; padding: 12px 24px;">Call (902) 920-0180</a>
+                <a href="mailto:contact@drtc.net" class="cta-btn" style="text-decoration: none; padding: 12px 24px;">Email Support</a>
+            </div>
+
+            <div class="quick-links" aria-label="Site directory map">
+                <div class="quick-links-title">Directory Map</div>
+                <div class="quick-links-grid">
+                    <a class="quick-link" href="../../index.html">Home</a>
+                    <a class="quick-link" href="../../pages/company/about.html">About Us</a>
+                    <a class="quick-link" href="../../pages/services/services.html">Services</a>
+                    <a class="quick-link" href="../../pages/company/contact.html">Contact Us</a>
+                    <a class="quick-link" href="../../pages/company/request-a-quote.html">Request a Quote</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
+
+
+
+
