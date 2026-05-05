@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request a Quote | Done Right Tech Company</title>
+    <link rel="icon" href="../../images/favicon.png" type="image/png">
+    
+
+    <link rel="stylesheet" href="../../css/global-spice.css?v=9">
+
+    <link rel="stylesheet" href="../../css/footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<header class="navbar" id="navbar">
+  <div class="navInner">
+    <a class="brand" href="../../index.html">
+        <img src="../../images/DRTC-Logo.png" alt="DRTC">
+        <span style="display:none;">DRTC</span>
+    </a>
+
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="navLinks" aria-label="Primary navigation" id="navLinks">
+      <a class="navLink" href="../../index.html">Home</a>
+      <a class="navLink" href="../../pages/company/about.html">About Us</a>
+
+      <div class="navItem hasDropdown">
+        <a class="navLink navLinkBtn" href="../../pages/services/services.html" aria-haspopup="true">
+          Services
+                    <span class="chev">▾</span>
+        </a>
+        
+        <div class="dropdown" role="menu" aria-label="Services menu">
+
+          <div class="dropItem hasSubmenu" role="none">
+            <a class="dropItemBtn mainBtn" href="../../pages/services/services.html#ds-main" aria-haspopup="true">
+              Digital Services 
+                            <span class="arrow">›</span>
+            </a>
+            <div class="submenu" role="menu">
+              <a class="subItem" href="../../pages/services/services.html?open=web-development" role="menuitem">Web Development</a>
+              <a class="subItem" href="../../pages/services/services.html?open=infrastructure-hosting" role="menuitem">Infrastructure Hosting</a>
+              <a class="subItem" href="../../pages/services/services.html?open=server-configuration" role="menuitem">Server Configuration</a>
+            </div>
+          </div>
+
+          <div class="dropItem hasSubmenu" role="none">
+            <a class="dropItemBtn mainBtn" href="../../pages/services/services.html#rs-main" aria-haspopup="true">
+              Residential Services 
+                            <span class="arrow">›</span>
+            </a>
+            <div class="submenu" role="menu">
+              <a class="subItem" href="../../pages/services/services.html?open=pc-building" role="menuitem">PC Planning & Building</a>
+              <a class="subItem" href="../../pages/services/services.html?open=hardware-support" role="menuitem">Hardware Support & Repair</a>
+              <a class="subItem" href="../../pages/services/services.html?open=software-support" role="menuitem">Software Installation & Support</a>
+            </div>
+          </div>
+
+          <div class="dropItem hasSubmenu" role="none">
+            <a class="dropItemBtn mainBtn" href="../../pages/services/services.html#en-main" aria-haspopup="true">
+              Networking
+                            <span class="arrow">›</span>
+            </a>
+            <div class="submenu" role="menu">
+              <a class="subItem" href="../../pages/services/services.html?open=enterprise-networking" role="menuitem">Enterprise Networking</a>
+              <a class="subItem" href="../../pages/services/services.html?open=home-networking" role="menuitem">Home Networking</a>
+              <a class="subItem" href="../../pages/services/services.html?open=voip-setup" role="menuitem">VoIP Setup & Installation</a>
+            </div>
+          </div>
+
+        </div> </div>
+
+      <a class="navLink" href="../../pages/support/support.html">Support</a>
+        <div class="navItem hasDropdown">
+            <a class="navLink navLinkBtn cta active" href="../../pages/company/contact.html" aria-haspopup="true">
+                Contact
+                <span class="chev">▾</span>
+            </a>
+            <div class="dropdown" role="menu" aria-label="Contact menu">
+                <a class="dropItem" href="../../pages/company/contact.html" role="menuitem">Contact Us</a>
+                <a class="dropItem" href="../../pages/company/request-a-quote.html" role="menuitem">Request a Quote</a>
+            </div>
+        </div>
+    </nav>
+  </div>
+</header>
+
+<main class="page" id="main-content">
+  <section class="hero" id="home">
+    <div class="container">
+                <h1>Request a Business Quote</h1>
+                    <p>Tell us about your business requirements and project scope. Our team will prepare a tailored quote for your organization.</p>
+
+          <div class="contact-layout">
+                <div class="form-wrapper">
+                     <h2>Business Project Details</h2>
+                     <form action="https://formspree.io/f/xqeqoepv" class="fs-form" target="_top" method="POST">
+                      <div class="fs-field">
+                          <label class="fs-label" for="name">Primary Contact Name</label>
+                          <input class="fs-input" id="name" name="name" required placeholder="FirstName LastName" />
+                      </div>
+                      <div class="fs-field">
+                          <label class="fs-label" for="company">Business Name</label>
+                          <input class="fs-input" id="company" name="company" required placeholder="Your Company Name" />
+                      </div>
+                      <div class="fs-field">
+                          <label class="fs-label" for="email">Business Email Address</label>
+                          <input class="fs-input" id="email" name="email" required placeholder="youremail@email.com" />
+                      </div>
+                      <div class="fs-field">
+                          <label class="fs-label" for="number">Business Phone Number</label>
+                          <input class="fs-input" id="number" name="number" required placeholder="+1 (234) 567-8910" />
+                      </div>
+                      <div class="fs-field">
+                          <label class="fs-label" for="service">Service Needed</label>
+                          <input class="fs-input" id="service" name="service" required placeholder="Web Development, Networking, IT Support, etc." />
+                      </div>
+                      <div class="fs-field">
+                          <label class="fs-label" for="message">Project Scope</label>
+                          <textarea class="fs-textarea" id="message" name="message" required placeholder="Tell us about your goals, timeline, and requirements."></textarea>
+                      </div>
+                      <div class="fs-button-group">
+                          <button class="fs-button" type="submit">Send Quote Request</button>
+                      </div>
+                     </form>
+                </div>
+
+                <aside class="call-section" aria-label="Contact options">
+                     <h2>Business Contact Options</h2>
+                     <p>Use the main inbox or contact a team member directly for project and contract inquiries.</p>
+                     <a href="tel:+19029200180" class="call-btn">
+                          <i class="fa-solid fa-phone"></i>
+                          Call Us: (902) 920-0180
+                     </a>
+                    <a href="mailto:contact@drtc.net?subject=Quote%20Request" class="email-cta">Email Main Inbox</a>
+                    <div class="team-email-grid" aria-label="Team email actions">
+                        <a href="mailto:willh@drtc.net?subject=Quote%20Request" class="email-cta">Email Will Hyndman</a>
+                        <a href="mailto:andrev@drtc.net?subject=Quote%20Request" class="email-cta">Email Andrew Veinotte</a>
+                        <a href="mailto:lelanj@drtc.net?subject=Quote%20Request" class="email-cta">Email Leland Jensen</a>
+                        <a href="mailto:chloer@drtc.net?subject=Quote%20Request" class="email-cta">Email Chloe Rodgerson</a>
+                    </div>
+                </aside>
+          </div>
+
+    </div>
+  </section>
+</main>
+
+<hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 0;">
+
+<footer style="padding: 56px 18px 0; color: rgba(255,255,255,0.55); font-size: 0.9rem; font-family: 'DM Sans', system-ui, sans-serif;">
+    <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 60px 80px; padding-bottom: 48px;">
+
+        <div>
+            <h4 style="color: #fff; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 20px; opacity: 0.9;">Company</h4>
+            <a href="../../index.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-house" style="font-size:0.85rem;width:14px;text-align:center;"></i>Home</a>
+            <a href="../../pages/company/about.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-circle-info" style="font-size:0.85rem;width:14px;text-align:center;"></i>About Us</a>
+            <a href="../../pages/company/contact.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-envelope" style="font-size:0.85rem;width:14px;text-align:center;"></i>Contact Us</a>
+            <a href="../../pages/company/request-a-quote.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-file-invoice-dollar" style="font-size:0.85rem;width:14px;text-align:center;"></i>Request a Quote</a>
+        </div>
+
+        <div>
+            <h4 style="color: #fff; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 20px; opacity: 0.9;">Support</h4>
+            <a href="../../pages/support/support.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-headset" style="font-size:0.85rem;width:14px;text-align:center;"></i>Support Portal</a>
+            <a href="../../pages/company/request-a-quote.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-paper-plane" style="font-size:0.85rem;width:14px;text-align:center;"></i>Submit a Request</a>
+        </div>
+
+        <div>
+            <h4 style="color: #fff; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 20px; opacity: 0.9;">Social</h4>
+            <a href="https://www.instagram.com/donerighttechco" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-brands fa-instagram" style="font-size:0.85rem;width:14px;text-align:center;"></i>Instagram</a>
+            <a href="https://x.com/donerighttechco" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-brands fa-x-twitter" style="font-size:0.85rem;width:14px;text-align:center;"></i>X</a>
+            <a href="https://www.tiktok.com/@donerighttechco" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-brands fa-tiktok" style="font-size:0.85rem;width:14px;text-align:center;"></i>TikTok</a>
+            <a href="https://bsky.app/profile/done-righttechco.bsky.social" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-brands fa-bluesky" style="font-size:0.85rem;width:14px;text-align:center;"></i>BlueSky</a>
+        </div>
+
+    </div>
+    <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 0 -18px; padding: 20px 18px 28px; text-align: center; font-size: 0.82rem; color: rgba(255,255,255,0.35);">
+        <span>&copy; 2026 Done Right Tech Company. All rights reserved.</span><span style="margin: 0 10px;">&middot;</span><span>Hosted by IIS &middot; Made by Done Right Tech Company</span>
+    </div>
+</footer>
+
+
+
+
+    <script src="../../js/script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
