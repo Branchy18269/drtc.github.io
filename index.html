@@ -1,167 +1,463 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<script>
-    window.location.href = "maintainance.html";
-</script>
-<!-- ================= METADATA & SYSTEM LINKS ================= -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Done Right Tech Company delivers professional digital solutions for home and enterprise, custom web development, secure networking, PC building, and IT support. Right here in the Province of Nova Scotia, Canada.">
     <title>Done Right Tech Company</title>
-    <link rel="icon" href="images/favicon.png" type="image/png">
-
-    <link rel="stylesheet" href="css/global-spice.css?v=9">
-    <link rel="stylesheet" href="css/footer.css">
+    
+    <!-- External Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ========================================================
+           CORE SITE STYLES (Merged from style.css)
+           ======================================================== */
+        *, ::before, ::after { box-sizing: border-box; }
+        * { border: 0; margin: 0; padding: 0; }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            font-optical-sizing: auto;
+            background: #07080d;
+            color: rgba(255, 255, 255, 0.86);
+            height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 0;
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: -80px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.82) 0%, rgba(0,26,77,0.78) 50%, rgba(13,13,43,0.84) 100%);
+            pointer-events: none;
+            z-index: -1;
+            transform: translateZ(0);
+        }
+
+        button, input, textarea, select {
+            font-family: inherit; font-size: 100%; color: inherit; background: transparent; 
+        }
+
+        a { color: inherit; text-decoration: none; }
+        a:focus-visible, button:focus-visible, .navLink:focus-visible, .primary-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 3px;
+        }
+        
+        .skip-link {
+            position: absolute; top: -100px; left: 16px; z-index: 1000;
+            padding: 12px 20px; background: var(--primary); color: #000;
+            font-weight: 700; border-radius: 8px; transition: top 0.2s ease;
+        }
+        .skip-link:focus { top: 16px; }
+
+        /* --- THEME VARIABLES --- */
+        :root {
+            --bg: #07080d;
+            --panel: rgba(255, 255, 255, 0.06);
+            --panel2: rgba(255, 255, 255, 0.08);
+            --text: rgba(255, 255, 255, 0.86);
+            --muted: rgba(255, 255, 255, 0.62);
+            --border: rgba(255, 255, 255, 0.12);
+            --shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+            --primary: #4facfe;
+            --primary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        /* ================= NEW NAVBAR (DESKTOP & MOBILE) ================= */
+        .site-header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(7, 8, 13, 0.85);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        .site-header.scrolled {
+            padding: 5px 0;
+            background: rgba(7, 8, 13, 0.98);
+        }
+        
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 15px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .nav-brand img {
+            max-height: 45px; width: auto; display: block;
+        }
+
+        .main-nav {
+            display: flex; align-items: center; gap: 30px;
+        }
+
+        .nav-list {
+            display: flex; align-items: center; gap: 20px; list-style: none; margin: 0; padding: 0;
+        }
+
+        .nav-link {
+            color: var(--text); font-weight: 500; font-size: 15px;
+            display: flex; align-items: center; gap: 6px; padding: 10px 15px;
+            border-radius: 8px; transition: all 0.2s ease; cursor: pointer;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #fff; background: var(--panel);
+        }
+
+        /* Mega Menu Dropdown */
+        .nav-item-dropdown { position: relative; }
+        .dropdown-menu {
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(15px);
+            background: #11141e; border: 1px solid var(--border); border-radius: 16px;
+            box-shadow: var(--shadow); opacity: 0; visibility: hidden;
+            transition: all 0.3s ease; pointer-events: none;
+            padding: 24px; display: flex; gap: 40px; min-width: 600px;
+        }
+        /* Invisible hover bridge */
+        .nav-item-dropdown::after {
+            content: ''; position: absolute; top: 100%; left: 0; width: 100%; height: 20px;
+        }
+        .nav-item-dropdown:hover .dropdown-menu {
+            opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); pointer-events: auto;
+        }
+
+        .mega-column h4 {
+            color: var(--primary); font-family: 'Sora', sans-serif; font-size: 0.9rem;
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px;
+        }
+        .mega-column a {
+            display: block; color: var(--muted); font-size: 0.95rem; padding: 8px 0;
+            transition: color 0.2s ease;
+        }
+        .mega-column a:hover { color: #fff; transform: translateX(3px); }
+
+        .nav-btn {
+            background: var(--primary-gradient); color: #000; padding: 10px 24px;
+            border-radius: 50px; font-weight: 700; transition: transform 0.2s; border: none;
+            display: inline-block; cursor: pointer; font-size: 15px;
+        }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3); color: #fff; }
+
+        /* Mobile Toggle */
+        .mobile-toggle {
+            display: none; background: none; border: none; color: #fff;
+            font-size: 1.5rem; cursor: pointer; padding: 5px;
+        }
+
+        /* ================= ANIMATIONS & GLOBAL SPICE ================= */
+        body::after {
+            content: ""; position: fixed; top: 50%; left: 50%; width: 150vw; height: 150vh;
+            transform: translate(-50%, -50%);
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(79, 172, 254, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 42, 95, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(0, 242, 254, 0.1) 0%, transparent 50%);
+            pointer-events: none; z-index: -1; animation: drift 20s infinite alternate linear; mix-blend-mode: screen;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+            50% { transform: translate(-45%, -55%) rotate(10deg) scale(1.1); }
+            100% { transform: translate(-55%, -45%) rotate(-10deg) scale(0.9); }
+        }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        h1, h2, h3 { text-shadow: 0 0 40px rgba(79, 172, 254, 0.35); }
+        p { color: rgba(255, 255, 255, 0.85); line-height: 1.7; font-size: 1.05rem; }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 30%, #ff2a5f 70%, #ff7b9c 100%);
+            background-size: 300% 300%; animation: gradientShift 6s ease infinite; border: none;
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4); color: #000; font-weight: 800;
+            padding: 14px 32px; border-radius: 50px; font-size: 16px; transition: transform 0.2s; display: inline-block;
+        }
+        .primary-btn:hover { box-shadow: 0 12px 30px rgba(79, 172, 254, 0.6); transform: translateY(-4px) scale(1.05); color: #fff; }
+
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* ================= HERO SECTION (STATIC LOGO) ================= */
+        .hero-container {
+            position: relative; width: 100%; min-height: 90vh; display: flex; align-items: center; justify-content: center;
+            padding: 120px 20px 80px; background: radial-gradient(circle at center, rgba(15, 18, 26, 0.4) 0%, #07080d 100%); overflow: hidden;
+        }
+        .hero-content {
+            position: relative; z-index: 3; text-align: center; max-width: 900px; display: flex; flex-direction: column; align-items: center;
+        }
+        .hero-logo {
+            max-width: 100%; width: 380px; height: auto; margin-bottom: 2rem;
+            filter: drop-shadow(0 0 25px rgba(79, 172, 254, 0.3)); 
+            /* Float animation removed for static image */
+        }
+        .hero-title {
+            font-family: 'Sora', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.1; margin-bottom: 1.5rem; color: #ffffff;
+        }
+        .hero-title .highlight {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.3rem); color: rgba(255, 255, 255, 0.75); max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.6;
+        }
+        .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        
+        .secondary-btn {
+            display: inline-block; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff;
+            font-weight: 600; padding: 14px 32px; border-radius: 50px; font-size: 16px; backdrop-filter: blur(10px); transition: all 0.3s ease;
+        }
+        .secondary-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
+
+        /* Mobile Navbar overrides */
+        @media (max-width: 960px) {
+            .mobile-toggle { display: block; }
+            .main-nav {
+                position: absolute; top: 100%; left: 0; width: 100%;
+                background: #0b0d14; border-bottom: 1px solid var(--border);
+                flex-direction: column; align-items: flex-start; padding: 20px; gap: 15px;
+                opacity: 0; visibility: hidden; transform: translateY(-10px);
+                transition: all 0.3s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            }
+            .main-nav.active { opacity: 1; visibility: visible; transform: translateY(0); }
+            
+            .nav-list { flex-direction: column; width: 100%; align-items: flex-start; gap: 10px; }
+            .nav-list li { width: 100%; }
+            .nav-link { width: 100%; justify-content: space-between; }
+            
+            /* Mobile Mega Menu handling */
+            .dropdown-menu {
+                position: static; transform: none; width: 100%; min-width: auto;
+                background: transparent; border: none; box-shadow: none;
+                flex-direction: column; gap: 20px; padding: 10px 15px;
+                display: none; /* Hidden on mobile by default */
+            }
+            /* Shown when toggled via JS on mobile */
+            .nav-item-dropdown.mobile-open .dropdown-menu {
+                display: flex; opacity: 1; visibility: visible; pointer-events: auto;
+            }
+            .nav-item-dropdown:hover .dropdown-menu {
+                transform: none; /* Reset desktop hover */
+            }
+            .mega-column h4 { margin-bottom: 10px; font-size: 0.85rem; }
+            
+            .nav-actions { width: 100%; display: flex; justify-content: center; margin-top: 10px; }
+        }
+
+        /* ================= NEW SERVICES GRID ================= */
+        .section-wrapper { margin-top: -60px; position: relative; z-index: 10; padding-bottom: 80px; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto; padding: 0 18px; }
+
+        .service-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            padding: 40px 32px; border-radius: 20px; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+            display: flex; flex-direction: column; align-items: flex-start; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        }
+        .service-card:hover {
+            transform: translateY(-8px) scale(1.02); border-color: rgba(79, 172, 254, 0.5); box-shadow: 0 15px 35px rgba(79, 172, 254, 0.25), 0 0 25px rgba(79, 172, 254, 0.15);
+        }
+
+        .service-icon-wrapper {
+            width: 70px; height: 70px; border-radius: 16px; background: linear-gradient(135deg, rgba(79, 172, 254, 0.1), rgba(0, 242, 254, 0.05));
+            border: 1px solid rgba(79, 172, 254, 0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 24px;
+        }
+        .service-icon { color: var(--primary); font-size: 2rem; }
+
+        .service-title { font-family: 'Sora', sans-serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; color: #fff; }
+        .service-desc { font-size: 0.95rem; color: var(--muted); line-height: 1.6; margin-bottom: 24px; flex-grow: 1; }
+        .service-link { color: var(--primary); font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; transition: gap 0.2s; }
+        .service-link i { font-size: 0.8rem; transition: transform 0.2s ease; }
+        .service-link:hover { gap: 10px; color: #fff; }
+        .service-card:hover .service-link i { transform: translateX(4px); }
+
+        /* ================= ABOUT US ================= */
+        .about-section { padding: 60px 20px 100px; text-align: center; }
+        .about-container {
+            max-width: 900px; margin: 0 auto; background: var(--panel); border: 1px solid var(--border);
+            border-radius: 24px; padding: 40px; backdrop-filter: blur(10px);
+        }
+        .about-title { font-family: 'Sora', sans-serif; font-size: 2rem; margin-bottom: 20px; color: #fff; }
+        .about-text { color: var(--muted); font-size: 1.1rem; line-height: 1.7; }
+
+        /* ================= REVIEWS ================= */
+        .reviews-section { padding: 40px 0 80px 0; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.5)); overflow: hidden; }
+        .reviews-header { font-family: 'Sora', sans-serif; text-align: center; margin-bottom: 40px; font-size: 1.8rem; color: var(--text); font-weight: 700; }
+        .reviews-slider-viewport { width: 100%; max-width: 1200px; margin: 0 auto 24px; overflow: hidden; cursor: grab; touch-action: pan-y; user-select: none; }
+        .reviews-slider-viewport:active { cursor: grabbing; }
+        .reviews-slider-track { display: flex; width: max-content; gap: 30px; will-change: transform; }
+        .reviews-slider-track.is-dragging { cursor: grabbing; }
+
+        .review-card {
+            width: 350px; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            padding: 24px; border-radius: 16px; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px;
+        }
+        .review-text { color: var(--muted); font-style: italic; line-height: 1.5; flex-grow: 1; }
+        .review-author { color: var(--primary); font-weight: 700; font-size: 0.9rem; text-align: right; }
+        .stars { color: #ffd700; font-size: 0.9rem; }
+
+        /* ================= FOOTER (Merged from footer.css) ================= */
+        .site-footer {
+            margin-top: auto; padding: 28px 20px 18px; color: var(--muted); font-size: 14px;
+            border-top: 1px solid var(--border); background: linear-gradient(180deg, rgba(6, 10, 18, 0.78), rgba(2, 5, 10, 0.94));
+        }
+        .footer-grid { max-width: 1320px; margin: auto; display: grid; grid-template-columns: minmax(0, 1.15fr) repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
+        .footer-col {
+            background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 10px; transition: transform 0.4s, box-shadow 0.4s;
+        }
+        .footer-col:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(79, 172, 254, 0.15); border-color: rgba(79, 172, 254, 0.3); }
+        .footer-col h4 { font-family: 'Sora', sans-serif; color: #fff; font-size: 0.9rem; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.45px; }
+        .footer-link-group { display: grid; gap: 10px; }
+        
+        .footer-link {
+            display: inline-flex; align-items: center; gap: 10px; color: rgba(255, 255, 255, 0.7);
+            transition: color 0.18s ease, transform 0.18s ease; text-decoration: none;
+        }
+        .footer-link i {
+            width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 9px; background: linear-gradient(135deg, rgba(79, 172, 254, 0.22), rgba(0, 242, 254, 0.08));
+            border: 1px solid rgba(79, 172, 254, 0.24); box-shadow: inset 0 0 18px rgba(79, 172, 254, 0.08); color: #fff; font-size: 0.92rem; flex-shrink: 0;
+        }
+        .footer-link:hover { color: #fff; transform: translateX(4px); }
+
+        .footer-bottom {
+            max-width: 1320px; margin: 14px auto 0; padding-top: 12px; display: flex; justify-content: space-between;
+            gap: 12px; align-items: flex-end; color: var(--muted); font-size: 13px; border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 980px) { .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 640px) {
+            .hero-container { min-height: 80vh; padding: 100px 20px 60px; }
+            .hero-logo { width: 260px; }
+            .section-wrapper { margin-top: -40px; }
+            .services-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; align-items: flex-start; text-align: left; }
+            .reviews-slider-viewport { margin: 0 18px 20px; }
+            .review-card { width: 300px; }
+        }
+    </style>
 </head>
-<!-- ================= PAGE CONTENT START ================= -->
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
 <!-- ================= NAVIGATION BAR ================= -->
-<header class="navbar" id="navbar">
-  <div class="navInner">
-    <a class="brand" href="index.html">
-        <img src="images/DRTC-Logo.png" alt="DRTC">
-        <span style="display:none;">DRTC</span>
-    </a>
-
-    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-    <nav class="navLinks" aria-label="Primary navigation" id="navLinks">
-      <a class="navLink active" href="index.html">Home</a>
-            <a class="navLink" href="pages/company/about.html">About Us</a>
-
-      <div class="navItem hasDropdown">
-                <a class="navLink navLinkBtn" href="pages/services/services.html" aria-haspopup="true">
-          Services
-          <span class="chev">▾</span>
+<header class="site-header" id="siteHeader">
+    <div class="nav-container">
+        <a class="nav-brand" href="#main-content">
+            <img src="images/DRTC-Logo.png" alt="DRTC Logo">
         </a>
-        
-        <div class="dropdown" role="menu" aria-label="Services menu">
 
-          <div class="dropItem hasSubmenu" role="none">
-                        <a class="dropItemBtn mainBtn" href="pages/services/services.html#ds-main" aria-haspopup="true">
-              Digital Services 
-              <span class="arrow">▸</span>
-            </a>
-            <div class="submenu" role="menu">
-                            <a class="subItem" href="pages/services/services.html?open=web-development" role="menuitem">Web Development</a>
-                            <a class="subItem" href="pages/services/services.html?open=infrastructure-hosting" role="menuitem">Infrastructure Hosting</a>
-                            <a class="subItem" href="pages/services/services.html?open=server-configuration" role="menuitem">Server Configuration</a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="main-nav" id="mainNav">
+            <ul class="nav-list">
+                <li><a class="nav-link active" href="index.html">Home</a></li>
+                <li><a class="nav-link" href="about.html">About Us</a></li>
+                
+                <!-- Mega Menu Dropdown -->
+                <li class="nav-item-dropdown">
+                    <a class="nav-link" href="services.html" id="servicesToggle">
+                        Services <i class="fa-solid fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="mega-column">
+                            <h4>Digital</h4>
+                            <a href="services.html?open=web-development">Web Development</a>
+                            <a href="services.html?open=infrastructure-hosting">Cloud Hosting</a>
+                            <a href="services.html?open=server-configuration">Server Config</a>
+                        </div>
+                        <div class="mega-column">
+                            <h4>Residential</h4>
+                            <a href="services.html?open=pc-building">PC Building</a>
+                            <a href="services.html?open=hardware-support">Hardware Repair</a>
+                            <a href="services.html?open=software-support">Software Support</a>
+                        </div>
+                        <div class="mega-column">
+                            <h4>Networking</h4>
+                            <a href="services.html?open=enterprise-networking">Enterprise Networks</a>
+                            <a href="services.html?open=home-networking">Home Networking</a>
+                            <a href="services.html?open=voip-setup">VoIP Setup</a>
+                        </div>
+                    </div>
+                </li>
+
+                <li><a class="nav-link" href="support.html">Support</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="contact.html" class="nav-btn">Contact Us</a>
             </div>
-          </div>
-
-          <div class="dropItem hasSubmenu" role="none">
-                        <a class="dropItemBtn mainBtn" href="pages/services/services.html#rs-main" aria-haspopup="true">
-              Residential Services 
-              <span class="arrow">▸</span>
-            </a>
-            <div class="submenu" role="menu">
-                            <a class="subItem" href="pages/services/services.html?open=pc-building" role="menuitem">PC Planning & Building</a>
-                            <a class="subItem" href="pages/services/services.html?open=hardware-support" role="menuitem">Hardware Support & Repair</a>
-                            <a class="subItem" href="pages/services/services.html?open=software-support" role="menuitem">Software Installation & Support</a>
-            </div>
-          </div>
-
-          <div class="dropItem hasSubmenu" role="none">
-                        <a class="dropItemBtn mainBtn" href="pages/services/services.html#en-main" aria-haspopup="true">
-              Networking
-              <span class="arrow">▸</span>
-            </a>
-            <div class="submenu" role="menu">
-                            <a class="subItem" href="pages/services/services.html?open=enterprise-networking" role="menuitem">Enterprise Networking</a>
-                            <a class="subItem" href="pages/services/services.html?open=home-networking" role="menuitem">Home Networking</a>
-                            <a class="subItem" href="pages/services/services.html?open=voip-setup" role="menuitem">VoIP Setup & Installation</a>
-            </div>
-          </div>
-
-        </div> </div>
-
-      <a class="navLink" href="pages/support/support.html">Support</a>
-            <div class="navItem hasDropdown">
-                <a class="navLink navLinkBtn cta" href="pages/company/contact.html" aria-haspopup="true">
-                    Contact
-                    <span class="chev">▾</span>
-                </a>
-                <div class="dropdown" role="menu" aria-label="Contact menu">
-                    <a class="dropItem" href="pages/company/contact.html" role="menuitem">Contact Us</a>
-                    <a class="dropItem" href="pages/company/request-a-quote.html" role="menuitem">Request a Quote</a>
-                </div>
-            </div>
-    </nav>
-  </div>
+        </nav>
+    </div>
 </header>
-<!-- ================= END NAVIGATION ================= -->
 
 <!-- ================= MAIN CONTENT START ================= -->
 <main id="main-content">
-    <!-- IMAGE CAROUSEL SECTION -->
     
-<!-- ================= NEW SECTION ================= -->
-<section class="carousel-container" id="carouselContainer">
-        <!-- Overlay for text readability -->
-        <div class="carousel-overlay"></div>
-        
-        <!-- Text Content -->
-        <div class="carousel-content">
-            <!-- LOGO IMAGE -->
-            <img src="images/DRTC-Logo.png" alt="Done Right Tech Company" class="carousel-logo">
+    <!-- ================= HERO SECTION (NEW) ================= -->
+    <section class="hero-container" id="heroContainer">
+        <div class="hero-content reveal active">
+            <img src="images/DRTC-Logo.png" alt="DRTC Logo" class="hero-logo">
             
-            <p class="carousel-subtitle">Professional digital solutions for home and enterprise. From custom web development to secure network infrastructure.</p>
-            <a href="pages/company/contact.html" class="primary-btn">Contact Us</a>
+            <h1 class="hero-title">IT & Infrastructure Solutions<br><span class="highlight">Done Right.</span></h1>
+            <p class="hero-subtitle">Professional digital solutions for home and enterprise. From custom web development to secure network infrastructure.</p>
+            
+            <div class="hero-actions">
+                <a href="contact.html" class="primary-btn">Get Started</a>
+                <a href="services.html" class="secondary-btn">Explore Services</a>
+            </div>
         </div>
-
-        <!-- Slides will be injected here by Javascript -->
     </section>
 
-    <!-- SERVICES PREVIEW SECTION -->
-    
-<!-- ================= NEW SECTION ================= -->
-<section class="section-wrapper">
-        
-      <!-- == Grid Layout Structure == -->
-      <div class="services-grid">
-            
-            <!-- Card 1: Digital Services -->
+    <!-- ================= SERVICES PREVIEW SECTION (UPDATED) ================= -->
+    <section class="section-wrapper" id="services">
+        <div class="services-grid">
+            <!-- Card 1 -->
             <article class="service-card reveal delay-100">
-                <div class="service-icon"><i class="fa-solid fa-server"></i></div>
+                <div class="service-icon-wrapper">
+                    <div class="service-icon"><i class="fa-solid fa-server"></i></div>
+                </div>
                 <h2 class="service-title">Digital Services</h2>
                 <p class="service-desc">Complete web development, infrastructure hosting, and server configuration. We build the digital foundation your business needs to thrive online.</p>
-                <a href="pages/services/services.html#ds-main" class="service-link">Learn More <span>&rarr;</span></a>
+                <a href="services.html" class="service-link">Learn More <i class="fa-solid fa-arrow-right"></i></a>
             </article>
 
-            <!-- Card 2: Residential Services -->
+            <!-- Card 2 -->
             <article class="service-card reveal delay-200">
-                <div class="service-icon"><i class="fa-solid fa-house-laptop"></i></div>
+                <div class="service-icon-wrapper">
+                    <div class="service-icon"><i class="fa-solid fa-house-laptop"></i></div>
+                </div>
                 <h2 class="service-title">Residential Services</h2>
                 <p class="service-desc">Expert PC building, hardware repair, and home networking solutions. Whether you're a gamer or a remote worker, we keep your home tech running smoothly.</p>
-                <a href="pages/services/services.html#rs-main" class="service-link">Learn More <span>&rarr;</span></a>
+                <a href="services.html" class="service-link">Learn More <i class="fa-solid fa-arrow-right"></i></a>
             </article>
 
-            <!-- Card 3: Enterprise Networking -->
+            <!-- Card 3 -->
             <article class="service-card reveal delay-300">
-                <div class="service-icon"><i class="fa-solid fa-network-wired"></i></div>
-                <h2 class="service-title">Enterprise Networking</h2>
+                <div class="service-icon-wrapper">
+                    <div class="service-icon"><i class="fa-solid fa-network-wired"></i></div>
+                </div>
+                <h2 class="service-title">Networking</h2>
                 <p class="service-desc">Secure, scalable network architecture for businesses. From VoIP installation to comprehensive security audits, we ensure your data stays safe.</p>
-                <a href="pages/services/services.html#en-main" class="service-link">Learn More <span>&rarr;</span></a>
+                <a href="services.html" class="service-link">Learn More <i class="fa-solid fa-arrow-right"></i></a>
             </article>
-
         </div>
     </section>
 
-    <!-- ABOUT US SECTION -->
-    
-<!-- ================= NEW SECTION ================= -->
-<section class="about-section">
+    <!-- ================= ABOUT US SECTION ================= -->
+    <section class="about-section" id="about">
         <div class="about-container reveal">
             <h2 class="about-title">About Done Right Tech Company</h2>
             <p class="about-text">
@@ -170,130 +466,254 @@
         </div>
     </section>
 
-    <!-- REVIEW CAROUSEL -->
-    
-<!-- ================= NEW SECTION ================= -->
-<section id="reviews-carousel" class="reviews-section reveal delay-100" aria-label="Client reviews" role="region">
+    <!-- ================= REVIEW CAROUSEL ================= -->
+    <section id="reviews-carousel" class="reviews-section reveal delay-100" aria-label="Client reviews" role="region">
         <h3 class="reviews-header">What Our Clients Say</h3>
         <div class="reviews-slider-viewport" id="reviewsViewport" aria-label="Scrollable reviews - drag to scroll">
             <div class="reviews-slider-track" id="reviewsTrack">
                 
-        <!-- == Individual Card Item == -->
-        <div class="review-card">
+                <!-- Set 1 -->
+                <div class="review-card">
                     <div class="stars">★★★★★</div>
                     <p class="review-text">"Geek-Squad had me on hold for 2 hours to tell me they couldn't help, I called Done Right Tech Company and they helped me immediately! In and out in no time!"</p>
                     <div class="review-author">- Carol Howard</div>
                 </div>
-                
-        <!-- == Individual Card Item == -->
-        <div class="review-card">
+                <div class="review-card">
                     <div class="stars">★★★★</div>
                     <p class="review-text">"More client reviews are being added. In the meantime, we stay focused on fast response times, clear communication, and practical support."</p>
                     <div class="review-author">- Done Right Tech</div>
                 </div>
-                
-        <!-- == Individual Card Item == -->
-        <div class="review-card">
+                <div class="review-card">
                     <div class="stars">★★★★★</div>
                     <p class="review-text">"From websites and hosting to hardware and networking, our goal is to deliver dependable solutions that fit the way you actually work."</p>
                     <div class="review-author">- Done Right Tech</div>
                 </div>
-                
-        <!-- == Individual Card Item == -->
-        <div class="review-card">
+                <div class="review-card">
                     <div class="stars">★★★★★</div>
                     <p class="review-text">"Every project starts with understanding the problem properly, then recommending the right fix without unnecessary upselling or confusion."</p>
                     <div class="review-author">- Done Right Tech</div>
                 </div>
-                
-        <!-- == Individual Card Item == -->
-        <div class="review-card">
+                <div class="review-card">
                     <div class="stars">★★★★</div>
                     <p class="review-text">"Need help with support, upgrades, or infrastructure planning? Request a quote and we will scope the work around your needs, timeline, and budget."</p>
                     <div class="review-author">- Done Right Tech</div>
                 </div>
-                <!-- Duplicate set for seamless loop -->
                 
-        <!-- == Individual Card Item == -->
-        <div class="review-card">
+                <!-- Duplicate Set 2 for seamless loop -->
+                <div class="review-card">
                     <div class="stars">★★★★★</div>
                     <p class="review-text">"Geek-Squad had me on hold for 2 hours to tell me they couldn't help, I called Done Right Tech Company and they helped me immediately! In and out in no time!"</p>
                     <div class="review-author">- Carol Howard</div>
                 </div>
-                
-        <!-- == Individual Card Item == -->
-        <div class="review-card">
+                <div class="review-card">
                     <div class="stars">★★★★</div>
                     <p class="review-text">"More client reviews are being added. In the meantime, we stay focused on fast response times, clear communication, and practical support."</p>
                     <div class="review-author">- Done Right Tech</div>
                 </div>
-                
-        <!-- == Individual Card Item == -->
-        <div class="review-card">
+                <div class="review-card">
                     <div class="stars">★★★★★</div>
                     <p class="review-text">"From websites and hosting to hardware and networking, our goal is to deliver dependable solutions that fit the way you actually work."</p>
                     <div class="review-author">- Done Right Tech</div>
                 </div>
-                
-        <!-- == Individual Card Item == -->
-        <div class="review-card">
+                <div class="review-card">
                     <div class="stars">★★★★★</div>
                     <p class="review-text">"Every project starts with understanding the problem properly, then recommending the right fix without unnecessary upselling or confusion."</p>
                     <div class="review-author">- Done Right Tech</div>
                 </div>
-                
-        <!-- == Individual Card Item == -->
-        <div class="review-card">
+                <div class="review-card">
                     <div class="stars">★★★★</div>
                     <p class="review-text">"Need help with support, upgrades, or infrastructure planning? Request a quote and we will scope the work around your needs, timeline, and budget."</p>
                     <div class="review-author">- Done Right Tech</div>
                 </div>
+
             </div>
         </div>
     </section>
 
 </main>
-<!-- ================= MAIN CONTENT END ================= -->
-
-<hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 0;">
 
 <!-- ================= FOOTER ================= -->
-<footer style="padding: 56px 18px 0; color: rgba(255,255,255,0.55); font-size: 0.9rem; font-family: 'DM Sans', system-ui, sans-serif;">
-    <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 60px 80px; padding-bottom: 48px;">
-
-        <div>
-            <h4 style="color: #fff; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 20px; opacity: 0.9;">Company</h4>
-            <a href="index.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-house" style="font-size:0.85rem;width:14px;text-align:center;"></i>Home</a>
-            <a href="pages/company/about.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-circle-info" style="font-size:0.85rem;width:14px;text-align:center;"></i>About Us</a>
-            <a href="pages/company/contact.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-envelope" style="font-size:0.85rem;width:14px;text-align:center;"></i>Contact Us</a>
-            <a href="pages/company/request-a-quote.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-file-invoice-dollar" style="font-size:0.85rem;width:14px;text-align:center;"></i>Request a Quote</a>
+<footer class="site-footer">
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>Company</h4>
+            <div class="footer-link-group">
+                <a href="index.html" class="footer-link"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="about.html" class="footer-link"><i class="fa-solid fa-circle-info"></i> About Us</a>
+                <a href="contact.html" class="footer-link"><i class="fa-solid fa-envelope"></i> Contact Us</a>
+                <a href="quote.html" class="footer-link"><i class="fa-solid fa-file-invoice-dollar"></i> Request a Quote</a>
+            </div>
         </div>
 
-        <div>
-            <h4 style="color: #fff; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 20px; opacity: 0.9;">Support</h4>
-            <a href="pages/support/support.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-headset" style="font-size:0.85rem;width:14px;text-align:center;"></i>Support Portal</a>
-            <a href="pages/company/request-a-quote.html" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-solid fa-paper-plane" style="font-size:0.85rem;width:14px;text-align:center;"></i>Submit a Request</a>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <div class="footer-link-group">
+                <a href="support.html" class="footer-link"><i class="fa-solid fa-headset"></i> Support Portal</a>
+                <a href="quote.html" class="footer-link"><i class="fa-solid fa-paper-plane"></i> Submit a Request</a>
+            </div>
         </div>
 
-        <div>
-            <h4 style="color: #fff; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 20px; opacity: 0.9;">Social</h4>
-            <a href="https://www.instagram.com/donerighttechco" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-brands fa-instagram" style="font-size:0.85rem;width:14px;text-align:center;"></i>Instagram</a>
-            <a href="https://x.com/donerighttechco" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-brands fa-x-twitter" style="font-size:0.85rem;width:14px;text-align:center;"></i>X</a>
-            <a href="https://www.tiktok.com/@donerighttechco" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-brands fa-tiktok" style="font-size:0.85rem;width:14px;text-align:center;"></i>TikTok</a>
-            <a href="https://bsky.app/profile/done-righttechco.bsky.social" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:flex-start;gap:8px;color:rgba(255,255,255,0.55);text-decoration:none;margin-bottom:13px;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.55)'"><i class="fa-brands fa-bluesky" style="font-size:0.85rem;width:14px;text-align:center;"></i>BlueSky</a>
+        <div class="footer-col">
+            <h4>Social</h4>
+            <div class="footer-link-group">
+                <a href="https://www.instagram.com/donerighttechco" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="https://x.com/donerighttechco" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-x-twitter"></i> X</a>
+                <a href="https://www.tiktok.com/@donerighttechco" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+                <a href="https://bsky.app/profile/done-righttechco.bsky.social" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-bluesky"></i> BlueSky</a>
+            </div>
         </div>
-
     </div>
-    <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 0 -18px; padding: 20px 18px 28px; text-align: center; font-size: 0.82rem; color: rgba(255,255,255,0.35);">
-        <span>&copy; 2026 Done Right Tech Company. All rights reserved.</span><span style="margin: 0 10px;">&middot;</span><span>Hosted by IIS &middot; Made by Done Right Tech Company</span>
+    
+    <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 Done Right Tech Company. All rights reserved.</p>
+        <p class="footer-note">Hosted by IIS &middot; Made by Done Right Tech Company</p>
     </div>
 </footer>
-<!-- ================= END FOOTER ================= -->
 
+<script>
+    // =========================================
+    // CLEANED SCRIPT.JS FOR FACELIFT
+    // =========================================
 
-    <script src="js/script.js"></script>
+    // 1. REDONE NAVBAR LOGIC
+    (() => {
+        const header = document.getElementById("siteHeader");
+        const mobileToggle = document.getElementById("mobileToggle");
+        const mainNav = document.getElementById("mainNav");
+        const servicesToggle = document.getElementById("servicesToggle");
+        const dropdownParent = servicesToggle.parentElement;
+
+        // Sticky header effect
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 20) {
+                header.classList.add("scrolled");
+            } else {
+                header.classList.remove("scrolled");
+            }
+        });
+
+        // Mobile menu toggle
+        mobileToggle.addEventListener("click", (e) => {
+            e.stopPropagation();
+            mainNav.classList.toggle("active");
+            
+            // Swap icon between hamburger and close
+            const icon = mobileToggle.querySelector('i');
+            if (mainNav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Mobile dropdown toggle (accordion style)
+        servicesToggle.addEventListener("click", (e) => {
+            if (window.innerWidth <= 960) {
+                e.preventDefault(); // Prevent jump on mobile
+                dropdownParent.classList.toggle("mobile-open");
+            }
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener("click", (e) => {
+            if (!header.contains(e.target) && mainNav.classList.contains("active")) {
+                mainNav.classList.remove("active");
+                mobileToggle.querySelector('i').classList.replace('fa-xmark', 'fa-bars');
+                dropdownParent.classList.remove("mobile-open"); // Reset accordion
+            }
+        });
+    })();
+
+    // 2. REVIEWS AUTO-SCROLL
+    (() => {
+        const viewport = document.getElementById('reviewsViewport');
+        const track = document.getElementById('reviewsTrack');
+        if (!viewport || !track) return;
+
+        const CARD_WIDTH = 350;
+        const GAP = 30;
+        const STEP = CARD_WIDTH + GAP;
+        const CARDS_PER_SET = 5;
+        const SET_WIDTH = CARDS_PER_SET * STEP;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const SPEED = 45;
+
+        let position = 0;
+        let dragging = false;
+        let dragStartX = 0;
+        let dragStartPosition = 0;
+        let rafId = null;
+        let lastTime = 0;
+
+        function setTrackPosition(px) {
+            track.style.transform = `translateX(-${px}px)`;
+        }
+
+        function tick(now) {
+            if (!lastTime) lastTime = now;
+            const dt = (now - lastTime) / 1000;
+            lastTime = now;
+            if (!dragging && !prefersReducedMotion) {
+                position += SPEED * dt;
+                if (position >= SET_WIDTH) position -= SET_WIDTH;
+                setTrackPosition(position);
+            }
+            rafId = requestAnimationFrame(tick);
+        }
+
+        function onPointerDown(e) {
+            if (e.button !== 0 && e.type === 'mousedown') return;
+            dragging = true;
+            track.classList.add('is-dragging');
+            dragStartX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
+            dragStartPosition = position;
+            viewport.setPointerCapture?.(e.pointerId);
+            e.preventDefault();
+        }
+
+        function onPointerMove(e) {
+            if (!dragging) return;
+            const clientX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
+            position = dragStartPosition + (dragStartX - clientX);
+            setTrackPosition(position);
+        }
+
+        function onPointerUp(e) {
+            if (e.type === 'mouseup' && e.button !== 0) return;
+            dragging = false;
+            track.classList.remove('is-dragging');
+            while (position >= SET_WIDTH) position -= SET_WIDTH;
+            while (position < 0) position += SET_WIDTH;
+            setTrackPosition(position);
+            viewport.releasePointerCapture?.(e.pointerId);
+        }
+
+        viewport.addEventListener('pointerdown', onPointerDown, { passive: false });
+        viewport.addEventListener('pointermove', onPointerMove, { passive: true });
+        viewport.addEventListener('pointerup', onPointerUp, { passive: true });
+        viewport.addEventListener('pointerleave', onPointerUp, { passive: true });
+        viewport.addEventListener('pointercancel', onPointerUp, { passive: true });
+
+        setTrackPosition(0);
+        rafId = requestAnimationFrame(tick);
+    })();
+
+    // 3. SCROLL ANIMATIONS (Reveal Elements)
+    (() => {
+        const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    })();
+</script>
 </body>
 </html>
-
-
-

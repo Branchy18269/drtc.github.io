@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services | Done Right Tech Company</title>
+    <link rel="icon" href="../../images/favicon.png" type="image/png">
+    
+    <!-- External Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        *, ::before, ::after { box-sizing: border-box; }
+        * { border: 0; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #07080d;
+            --panel: rgba(255, 255, 255, 0.06);
+            --panel2: rgba(255, 255, 255, 0.08);
+            --text: rgba(255, 255, 255, 0.86);
+            --muted: rgba(255, 255, 255, 0.62);
+            --border: rgba(255, 255, 255, 0.12);
+            --shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+            --primary: #4facfe;
+            --primary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            font-optical-sizing: auto;
+            background: #07080d;
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex; 
+            flex-direction: column; 
+            position: relative;
+            z-index: 0;
+        }
+
+        /* Animated Ambient Background */
+        body::before {
+            content: ""; position: fixed; inset: -80px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.82) 0%, rgba(0,26,77,0.78) 50%, rgba(13,13,43,0.84) 100%);
+            pointer-events: none; z-index: -1; transform: translateZ(0);
+        }
+        body::after {
+            content: ""; position: fixed; top: 50%; left: 50%; width: 150vw; height: 150vh;
+            transform: translate(-50%, -50%);
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(79, 172, 254, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 42, 95, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(0, 242, 254, 0.1) 0%, transparent 50%);
+            pointer-events: none; z-index: -1; animation: drift 20s infinite alternate linear; mix-blend-mode: screen;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+            50% { transform: translate(-45%, -55%) rotate(10deg) scale(1.1); }
+            100% { transform: translate(-55%, -45%) rotate(-10deg) scale(0.9); }
+        }
+
+        button, input, textarea, select { font-family: inherit; font-size: 100%; color: inherit; background: transparent; }
+        a { color: inherit; text-decoration: none; }
+        a:focus-visible, button:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+        
+        .skip-link {
+            position: absolute; top: -100px; left: 16px; z-index: 1000; padding: 12px 20px;
+            background: var(--primary); color: #000; font-weight: 700; border-radius: 8px; transition: top 0.2s ease;
+        }
+        .skip-link:focus { top: 16px; }
+
+        .site-header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(7, 8, 13, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border); transition: all 0.3s ease;
+        }
+        .site-header.scrolled { padding: 5px 0; background: rgba(7, 8, 13, 0.98); }
+        
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 15px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-brand img { max-height: 45px; width: auto; display: block; filter: drop-shadow(0 0 10px rgba(79, 172, 254, 0.2)); }
+        
+        .main-nav { display: flex; align-items: center; gap: 30px; }
+        .nav-list { display: flex; align-items: center; gap: 20px; list-style: none; margin: 0; padding: 0; }
+        .nav-link {
+            color: var(--text); font-weight: 500; font-size: 15px; display: flex; align-items: center; gap: 6px;
+            padding: 10px 15px; border-radius: 8px; transition: all 0.2s ease; cursor: pointer;
+        }
+        .nav-link:hover, .nav-link.active { color: #fff; background: var(--panel); }
+
+        .nav-item-dropdown { position: relative; }
+        .dropdown-menu {
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(15px);
+            background: #11141e; border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow);
+            opacity: 0; visibility: hidden; transition: all 0.3s ease; pointer-events: none;
+            padding: 24px; display: flex; gap: 40px; min-width: 600px;
+        }
+        .nav-item-dropdown::after { content: ''; position: absolute; top: 100%; left: 0; width: 100%; height: 20px; }
+        .nav-item-dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+
+        .mega-column h4 {
+            font-family: 'Sora', sans-serif; font-size: 0.9rem; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px;
+        }
+        .mega-column h4 a { color: var(--primary); transition: color 0.2s ease; }
+        .mega-column h4 a:hover { color: #fff; }
+        .mega-column > a { display: block; color: var(--muted); font-size: 0.95rem; padding: 8px 0; transition: color 0.2s ease, transform 0.2s ease; }
+        .mega-column > a:hover { color: #fff; transform: translateX(3px); }
+
+        .nav-btn {
+            background: var(--primary-gradient); color: #000; padding: 10px 24px; border-radius: 50px;
+            font-weight: 700; transition: transform 0.2s, box-shadow 0.2s; border: none; display: inline-block; cursor: pointer; font-size: 15px;
+        }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3); color: #fff; }
+        .mobile-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; padding: 5px; }
+
+        @media (max-width: 960px) {
+            .mobile-toggle { display: block; }
+            .main-nav {
+                position: absolute; top: 100%; left: 0; width: 100%; background: #0b0d14; border-bottom: 1px solid var(--border);
+                flex-direction: column; align-items: flex-start; padding: 20px; gap: 15px; opacity: 0; visibility: hidden;
+                transform: translateY(-10px); transition: all 0.3s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            }
+            .main-nav.active { opacity: 1; visibility: visible; transform: translateY(0); }
+            .nav-list { flex-direction: column; width: 100%; align-items: flex-start; gap: 10px; }
+            .nav-list li { width: 100%; }
+            .nav-link { width: 100%; justify-content: space-between; }
+            .dropdown-menu {
+                position: static; transform: none; width: 100%; min-width: auto; background: transparent; border: none;
+                box-shadow: none; flex-direction: column; gap: 20px; padding: 10px 15px; display: none;
+            }
+            .nav-item-dropdown.mobile-open .dropdown-menu { display: flex; opacity: 1; visibility: visible; pointer-events: auto; }
+            .nav-item-dropdown:hover .dropdown-menu { transform: none; }
+            .nav-actions { width: 100%; display: flex; justify-content: center; margin-top: 10px; }
+        }
+
+        .page { flex: 1; padding: 120px 0 80px; }
+        .container { max-width: 1200px; margin: auto; padding: 0 20px; }
+        
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        .hero-intro { text-align: center; margin-bottom: 80px; }
+        .hero-intro h1 { font-family: 'Sora', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 10px; color: #fff; text-shadow: 0 0 40px rgba(79, 172, 254, 0.35); }
+        .hero-intro .sub-head { color: var(--primary); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 24px; font-size: 1.1rem; }
+        .hero-intro p { color: var(--muted); font-size: 1.15rem; max-width: 760px; margin: 0 auto 30px auto; line-height: 1.6; }
+        
+        .services-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+        .services-action-btn {
+            display: inline-flex; align-items: center; justify-content: center; padding: 14px 28px;
+            border-radius: 50px; font-weight: 700; font-size: 1rem; transition: all 0.2s ease;
+        }
+        .services-action-btn.primary { background: var(--primary-gradient); color: #000; border: none; box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3); }
+        .services-action-btn.primary:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(79, 172, 254, 0.5); color: #fff; }
+        .services-action-btn:not(.primary) { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; backdrop-filter: blur(10px); }
+        .services-action-btn:not(.primary):hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); transform: translateY(-3px); }
+
+        .category-header { text-align: center; margin: 60px 0 30px; position: relative; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .category-header h2 { font-family: 'Sora', sans-serif; font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 10px; }
+        .category-header::after { content: ""; display: block; width: 60px; height: 4px; background: var(--primary-gradient); margin: 15px auto 0; border-radius: 2px; }
+
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 60px; }
+        
+        .card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; padding: 36px 30px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; flex-direction: column;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        .card:hover {
+            transform: translateY(-8px) scale(1.02); border-color: rgba(79, 172, 254, 0.4);
+            box-shadow: 0 20px 40px rgba(79, 172, 254, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-status {
+            font-size: 0.85rem; font-weight: 800; letter-spacing: 1px; color: var(--primary);
+            text-transform: uppercase; margin-bottom: 12px; display: inline-block;
+            background: rgba(79, 172, 254, 0.1); padding: 4px 12px; border-radius: 50px; border: 1px solid rgba(79, 172, 254, 0.2);
+        }
+        .card h3 { font-family: 'Sora', sans-serif; color: #fff; font-size: 1.5rem; margin-bottom: 12px; font-weight: 700; line-height: 1.3; }
+        .card p { color: var(--muted); font-size: 1.05rem; line-height: 1.6; margin-bottom: 24px; flex-grow: 1; }
+        
+        .card-link {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: fit-content; margin-top: auto;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: #fff; border-radius: 50px;
+            padding: 12px 24px; font-weight: 700; font-size: 0.95rem; transition: all 0.3s ease; cursor: pointer;
+        }
+        .card-link::after { content: '\f061'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 0.8rem; transition: transform 0.3s; }
+        .card-link:hover { background: var(--primary-gradient); color: #000; border-color: transparent; box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3); }
+        .card-link:hover::after { transform: translateX(4px); }
+
+        #panel-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+            z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s ease;
+        }
+        #panel-overlay.active { opacity: 1; visibility: visible; }
+
+        #service-panel {
+            position: fixed; top: 0; right: -100%; width: min(600px, 100%); height: 100vh;
+            background: rgba(11, 13, 20, 0.95); backdrop-filter: blur(20px); z-index: 2001;
+            transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); box-shadow: -10px 0 50px rgba(0,0,0,0.5);
+            padding: 60px 40px; overflow-y: auto; border-left: 1px solid rgba(255,255,255,0.1);
+        }
+        #service-panel.active { right: 0; }
+
+        .close-panel {
+            position: absolute; top: 20px; left: 20px; font-size: 1.5rem; color: var(--text);
+            cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%;
+        }
+        .close-panel:hover { color: #fff; background: var(--primary); border-color: var(--primary); transform: rotate(90deg); }
+
+        .panel-content { margin-top: 20px; }
+        .panel-category { color: var(--primary); text-transform: uppercase; font-weight: 800; font-size: 0.85rem; letter-spacing: 2px; margin-bottom: 10px; }
+        .panel-title { font-family: 'Sora', sans-serif; font-size: 2.5rem; color: #fff; margin-bottom: 20px; line-height: 1.2; }
+        
+        .panel-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
+        .panel-tag { background: rgba(79, 172, 254, 0.1); border: 1px solid rgba(79, 172, 254, 0.2); color: #fff; padding: 8px 16px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; }
+
+        .panel-desc { font-size: 1.15rem; color: var(--text); margin-bottom: 30px; line-height: 1.7; }
+        
+        .panel-section-title { font-family: 'Sora', sans-serif; color: #fff; font-size: 1.3rem; margin: 40px 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        
+        .panel-list { list-style: none; padding: 0; }
+        .panel-list li { position: relative; padding-left: 32px; margin-bottom: 16px; color: var(--muted); font-size: 1.05rem; line-height: 1.6; }
+        .panel-list li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; left: 0; top: 2px; color: var(--primary); }
+
+        .panel-highlight-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin: 30px 0; }
+        .panel-highlight { background: rgba(255,255,255,0.03); padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); }
+        .panel-highlight-label { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; font-weight: 800; display: block; margin-bottom: 8px; letter-spacing: 1px; }
+        .panel-highlight-value { color: #fff; font-family: 'Sora', sans-serif; font-size: 1.2rem; display: block; margin-bottom: 8px; font-weight: 600; }
+        .panel-highlight-desc { font-size: 0.95rem; color: var(--muted); line-height: 1.5; }
+
+        .panel-cta-box { margin-top: 50px; padding: 40px 30px; background: linear-gradient(135deg, rgba(79,172,254,0.1), rgba(0,242,254,0.05)); border-radius: 20px; border: 1px solid rgba(79,172,254,0.3); text-align: center; }
+        .panel-cta-box h4 { font-family: 'Sora', sans-serif; font-size: 1.5rem; color: #fff; margin-bottom: 15px; }
+        .panel-cta-box p { color: rgba(255,255,255,0.8); margin-bottom: 25px; line-height: 1.6; }
+
+        /* ================= FOOTER (from index.html) ================= */
+        .site-footer {
+            margin-top: auto; padding: 28px 20px 18px; color: var(--muted); font-size: 14px;
+            border-top: 1px solid var(--border); background: linear-gradient(180deg, rgba(6, 10, 18, 0.78), rgba(2, 5, 10, 0.94));
+        }
+        .footer-grid { max-width: 1320px; margin: auto; display: grid; grid-template-columns: minmax(0, 1.15fr) repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
+        .footer-col {
+            background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 10px; transition: transform 0.4s, box-shadow 0.4s;
+        }
+        .footer-col:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(79, 172, 254, 0.15); border-color: rgba(79, 172, 254, 0.3); }
+        .footer-col h4 { font-family: 'Sora', sans-serif; color: #fff; font-size: 0.9rem; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.45px; }
+        .footer-link-group { display: grid; gap: 10px; }
+
+        .footer-link {
+            display: inline-flex; align-items: center; gap: 10px; color: rgba(255, 255, 255, 0.7);
+            transition: color 0.18s ease, transform 0.18s ease; text-decoration: none;
+        }
+        .footer-link i {
+            width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 9px; background: linear-gradient(135deg, rgba(79, 172, 254, 0.22), rgba(0, 242, 254, 0.08));
+            border: 1px solid rgba(79, 172, 254, 0.24); box-shadow: inset 0 0 18px rgba(79, 172, 254, 0.08); color: #fff; font-size: 0.92rem; flex-shrink: 0;
+        }
+        .footer-link:hover { color: #fff; transform: translateX(4px); }
+
+        .footer-bottom {
+            max-width: 1320px; margin: 14px auto 0; padding-top: 12px; display: flex; justify-content: space-between;
+            gap: 12px; align-items: flex-end; color: var(--muted); font-size: 13px; border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 980px) { .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 640px) {
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; align-items: flex-start; text-align: left; }
+        }
+        
+        @media (max-width: 768px) {
+            
+            #service-panel { padding: 40px 20px; }
+            .panel-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<header class="site-header" id="siteHeader">
+    <div class="nav-container">
+        <a class="nav-brand" href="index.html">
+            <!-- Using user's verbatim placeholder logic -->
+            <img src="images/DRTC-Logo.png" onerror="this.onerror=null; this.src='https://placehold.co/380x100/07080d/4facfe?text=DRTC+Tech';" alt="DRTC Logo">
+        </a>
+
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="main-nav" id="mainNav">
+            <ul class="nav-list">
+                <li><a class="nav-link" href="index.html">Home</a></li>
+                <li><a class="nav-link" href="about.html">About Us</a></li>
+
+                <!-- Mega Menu Dropdown -->
+                <li class="nav-item-dropdown">
+                    <a class="nav-link active" href="services.html" id="servicesToggle">
+                        Services <i class="fa-solid fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="mega-column">
+                            <!-- Retaining exact href logic for columns from user's code -->
+                            <h4><a href="services.html#ds-main">Digital</a></h4>
+                            <a href="services.html?open=web-development">Web Development</a>
+                            <a href="services.html?open=infrastructure-hosting">Cloud Hosting</a>
+                            <a href="services.html?open=server-configuration">Server Config</a>
+                        </div>
+                        <div class="mega-column">
+                            <h4><a href="services.html#rs-main">Residential</a></h4>
+                            <a href="services.html?open=pc-building">PC Building</a>
+                            <a href="services.html?open=hardware-support">Hardware Repair</a>
+                            <a href="services.html?open=software-support">Software Support</a>
+                        </div>
+                        <div class="mega-column">
+                            <h4><a href="services.html#en-main">Networking</a></h4>
+                            <a href="services.html?open=enterprise-networking">Enterprise Networks</a>
+                            <a href="services.html?open=home-networking">Home Networking</a>
+                            <a href="services.html?open=voip-setup">VoIP Setup</a>
+                        </div>
+                    </div>
+                </li>
+
+                <li><a class="nav-link" href="support.html">Support</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="contact.html" class="nav-btn">Contact Us</a>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<main class="page" id="main-content">
+  <div class="container">
+
+    <section class="hero-intro reveal" id="home">
+        <h1 class="reveal delay-100">Professional Tech Services</h1>
+        <div class="sub-head reveal delay-200">Done Right Tech Company</div>
+        <p class="reveal delay-300">Expert digital solutions, custom hardware building, and robust networking environments tailored for business and home users.</p>
+        <div class="services-actions reveal delay-300">
+            <a class="services-action-btn primary" href="quote.html">Request a Quote</a>
+            <a class="services-action-btn" href="contact.html">Contact Us</a>
+        </div>
+    </section>
+
+    <!-- Digital Services -->
+    <div class="category-header reveal" id="ds-main">
+        <h2>Digital Services</h2>
+    </div>
+    <div class="cards">
+        <div class="card reveal delay-100" data-service="web-development">
+            <h3>Web Development</h3>
+            <p>Custom websites designed for clarity, credibility, and conversion.</p>
+            <div class="card-link" onclick="openPanel('web-development')">Learn More</div>
+        </div>
+        <div class="card reveal delay-200" data-service="infrastructure-hosting">
+            <h3>Infrastructure Hosting</h3>
+            <p>Managed hosting environments with high uptime and backup reliability.</p>
+            <div class="card-link" onclick="openPanel('infrastructure-hosting')">Learn More</div>
+        </div>
+        <div class="card reveal delay-300" data-service="server-configuration">
+            <h3>Server Configuration</h3>
+            <p>Professional server builds, security hardening, and stable deployments.</p>
+            <div class="card-link" onclick="openPanel('server-configuration')">Learn More</div>
+        </div>
+    </div>
+
+    <!-- Residential Services -->
+    <div class="category-header reveal" id="rs-main">
+        <h2>Residential Services</h2>
+    </div>
+    <div class="cards">
+        <div class="card reveal delay-100" data-service="pc-building">
+            <h3>PC Planning & Building</h3>
+            <p>Custom gaming, office, and workstation builds designed around your workload.</p>
+            <div class="card-link" onclick="openPanel('pc-building')">Learn More</div>
+        </div>
+        <div class="card reveal delay-200" data-service="hardware-support">
+            <h3>Hardware Support & Repair</h3>
+            <p>Diagnostics and component restoration for laptops, desktops, and more.</p>
+            <div class="card-link" onclick="openPanel('hardware-support')">Learn More</div>
+        </div>
+        <div class="card reveal delay-300" data-service="software-support">
+            <h3>Software Support</h3>
+            <p>Installation, troubleshooting, and configuration for productivity and business software.</p>
+            <div class="card-link" onclick="openPanel('software-support')">Learn More</div>
+        </div>
+    </div>
+
+    <!-- Networking -->
+    <div class="category-header reveal" id="en-main">
+        <h2>Networking</h2>
+    </div>
+    <div class="cards">
+        <div class="card reveal delay-100" data-service="enterprise-networking">
+            <h3>Enterprise Networking</h3>
+            <p>Secure, segmented, and reliable network design for growing businesses.</p>
+            <div class="card-link" onclick="openPanel('enterprise-networking')">Learn More</div>
+        </div>
+        <div class="card reveal delay-200" data-service="home-networking">
+            <h3>Home Networking</h3>
+            <p>Wi-Fi optimization, mesh systems, and smart home connectivity solutions.</p>
+            <div class="card-link" onclick="openPanel('home-networking')">Learn More</div>
+        </div>
+        <div class="card reveal delay-300" data-service="voip-setup">
+            <h3>VoIP Setup & Installation</h3>
+            <p>Modern communication systems with professional call flows and handsets.</p>
+            <div class="card-link" onclick="openPanel('voip-setup')">Learn More</div>
+        </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Interactive Side Panel -->
+<div id="panel-overlay" onclick="closePanel()"></div>
+<div id="service-panel">
+    <div class="close-panel" onclick="closePanel()"><i class="fa-solid fa-xmark"></i></div>
+    <div class="panel-content" id="panel-content">
+        <!-- Dynamic Content Injected Here by JS -->
+    </div>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>Company</h4>
+            <div class="footer-link-group">
+                <a href="index.html" class="footer-link"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="about.html" class="footer-link"><i class="fa-solid fa-circle-info"></i> About Us</a>
+                <a href="contact.html" class="footer-link"><i class="fa-solid fa-envelope"></i> Contact Us</a>
+                <a href="quote.html" class="footer-link"><i class="fa-solid fa-file-invoice-dollar"></i> Request a Quote</a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <h4>Support</h4>
+            <div class="footer-link-group">
+                <a href="support.html" class="footer-link"><i class="fa-solid fa-headset"></i> Support Portal</a>
+                <a href="quote.html" class="footer-link"><i class="fa-solid fa-paper-plane"></i> Submit a Request</a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <h4>Social</h4>
+            <div class="footer-link-group">
+                <a href="https://www.instagram.com/donerighttechco" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="https://x.com/donerighttechco" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-x-twitter"></i> X</a>
+                <a href="https://www.tiktok.com/@donerighttechco" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+                <a href="https://bsky.app/profile/done-righttechco.bsky.social" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-bluesky"></i> BlueSky</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 Done Right Tech Company. All rights reserved.</p>
+        <p class="footer-note">Hosted by IIS &middot; Made by Done Right Tech Company</p>
+    </div>
+</footer>
+
+<script>
+    // 1. NAVBAR LOGIC
+    (() => {
+        const header = document.getElementById("siteHeader");
+        const mobileToggle = document.getElementById("mobileToggle");
+        const mainNav = document.getElementById("mainNav");
+        const servicesToggle = document.getElementById("servicesToggle");
+        const dropdownParent = servicesToggle.parentElement;
+
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 20) header.classList.add("scrolled");
+            else header.classList.remove("scrolled");
+        });
+
+        mobileToggle.addEventListener("click", (e) => {
+            e.stopPropagation();
+            mainNav.classList.toggle("active");
+            const icon = mobileToggle.querySelector('i');
+            if (mainNav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        servicesToggle.addEventListener("click", (e) => {
+            if (window.innerWidth <= 960) {
+                e.preventDefault();
+                dropdownParent.classList.toggle("mobile-open");
+            }
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!header.contains(e.target) && mainNav.classList.contains("active")) {
+                mainNav.classList.remove("active");
+                mobileToggle.querySelector('i').classList.replace('fa-xmark', 'fa-bars');
+                dropdownParent.classList.remove("mobile-open");
+            }
+        });
+    })();
+
+    // 2. SCROLL ANIMATIONS
+    (() => {
+        const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    })();
+
+    // 3. SERVICE PANEL LOGIC & DATA
+    const serviceData = {
+        'web-development': {
+            category: 'Digital Services',
+            title: 'Web Development',
+            tags: ['Starting at $599'],
+            desc: 'We build professional websites and custom web solutions that help businesses present their brand clearly, convert more visitors, and support day-to-day operations with reliable performance.',
+            keyPoints: [
+                'Clear planning around user experience and calls to action.',
+                'Mobile-friendly builds with strong performance and accessibility.',
+                'Support for forms, content management, and integrations.'
+            ],
+            highlights: [
+                { label: 'Project Types', val: 'Business websites, landing pages, and custom portals', desc: 'Designed to look credible and guide visitors toward the right next step.' },
+                { label: 'Business Focus', val: 'Lead generation, trust, and usability', desc: 'We keep the build practical and aligned with your operations.' }
+            ],
+            included: ['Discovery & planning', 'Custom layouts', 'Basic SEO & Analytics'],
+            extraLabel: 'Best Fit For',
+            extraList: ['Outdated online presences', 'Teams needing more than a basic builder', 'Scalable growth sites'],
+            ctaTitle: 'Planning a new website?',
+            ctaDesc: 'We can help you scope the right structure and features before dev begins.'
+        },
+        'infrastructure-hosting': {
+            category: 'Digital Services',
+            title: 'Infrastructure Hosting',
+            tags: ['Contact us for a quote'],
+            desc: 'Managed hosting solutions for websites and business systems that need dependable uptime and clear oversight.',
+            keyPoints: [
+                'Hosting aligned to your workload and security needs.',
+                'Ongoing monitoring and update planning.',
+                'Professional support for migrations and performance tuning.'
+            ],
+            highlights: [
+                { label: 'Coverage', val: 'Managed hosting, migrations, and ongoing oversight', desc: 'Focused on resilience and change control.' },
+                { label: 'Priority', val: 'Availability, recovery readiness, and predictable performance', desc: 'Ready for future growth.' }
+            ],
+            included: ['Provisioning & deployment', 'Backup scheduling', 'Hardening'],
+            extraLabel: 'Ideal For',
+            extraList: ['Businesses needing more oversight', 'Internal tools & client platforms', 'Teams needing clear accountability'],
+            ctaTitle: 'Need dependable hosting?',
+            ctaDesc: 'We can review your current environment and recommend a migration path.'
+        },
+        'server-configuration': {
+            category: 'Digital Services',
+            title: 'Server Configuration',
+            tags: ['Contact us for a quote'],
+            desc: 'Configuring servers for stable operations, secure access, and dependable performance across on-prem or cloud.',
+            keyPoints: [
+                'Role-based configuration for file services and workloads.',
+                'Attention to patching and access control.',
+                'Clear documentation for long-term maintenance.'
+            ],
+            highlights: [
+                { label: 'Scope', val: 'Server builds, roles, policies, and remote admin', desc: 'Practical systems easier to support after deployment.' },
+                { label: 'Outcome', val: 'Stable infrastructure with clear guidance', desc: 'Keeping the environment manageable afterward.' }
+            ],
+            included: ['Deployment & service validation', 'Security policy setup', 'Virtualization support'],
+            extraLabel: 'Best Fit For',
+            extraList: ['First-time server environments', 'Cleaning up aging infrastructure', 'Teams needing dependable configurations'],
+            ctaTitle: 'Need a server configured?',
+            ctaDesc: 'We help plan, deploy, or clean up server environments that are built to last.'
+        },
+        'pc-building': {
+            category: 'Residential Services',
+            title: 'PC Planning & Building',
+            tags: ['Starting At $80 for planning, Parts & assembly quoted separately'],
+            desc: 'Custom PC design based on actual usage—gaming, business productivity, or high-performance workstations.',
+            keyPoints: [
+                'Parts selected for budget, workload, and reliability.',
+                'Professional assembly with cable management.',
+                'Validation and burn-in testing before delivery.'
+            ],
+            highlights: [
+                { label: 'Build Types', val: 'Office systems, gaming PCs, and workstations', desc: 'Planned around the actual applications you use.' },
+                { label: 'Finish', val: 'Clean assembly and ready-to-use delivery', desc: 'Professionally put together from day one.' }
+            ],
+            included: ['Consultation on budget/workload', 'Assembly & Thermal testing', 'OS Setup & Validation'],
+            extraLabel: 'Best Fit For',
+            extraList: ['Users avoiding pre-built compromises', 'Specific tasks like editing or AI', 'Users needing expert guidance'],
+            ctaTitle: 'Need a custom system?',
+            ctaDesc: 'Plan the right PC before spending on parts that don\'t match your needs.'
+        },
+        'hardware-support': {
+            category: 'Residential Services',
+            title: 'Hardware Support & Repair',
+            tags: ['$20/hour for diagnostics and repair recommendations, parts excluded.'],
+            desc: 'Resolving hardware problems for desktops, laptops, and storage with practical repair recommendations.',
+            keyPoints: [
+                'Structured troubleshooting to find the root cause.',
+                'Repair vs. Replacement guidance based on value.',
+                'Careful handling for data protection.'
+            ],
+            highlights: [
+                { label: 'Service Scope', val: 'Diagnostics, replacement, and restoration', desc: 'Determining what deliver the best outcome.' },
+                { label: 'Goal', val: 'Extend equipment life where practical', desc: 'The right fix for the situation, not just a sale.' }
+            ],
+            included: ['Diagnostics for memory/cooling/power', 'Component replacement', 'Post-repair validation'],
+            extraLabel: 'Common Issues',
+            extraList: ['Systems that overheat or fail to boot', 'Damaged ports or storage faults', 'Aging equipment assessments'],
+            ctaTitle: 'System failing or slowing down?',
+            ctaDesc: 'Assess the issue and decide if repair or upgrade makes sense.'
+        },
+        'software-support': {
+            category: 'Residential Services',
+            title: 'Software Support',
+            tags: ['$17/hour for installation, troubleshooting, and configuration'],
+            desc: 'Assistance with productivity tools, security apps, and business programs to reduce frustration and conflicts.',
+            keyPoints: [
+                'Support for setup, config, updates, and licensing.',
+                'Troubleshooting for crashes and conflicts.',
+                'Practical guidance for effective software use.'
+            ],
+            highlights: [
+                { label: 'Support Areas', val: 'Productivity, security, email, and business apps', desc: 'Focusing on apps that need to work properly for real users.' },
+                { label: 'Outcome', val: 'Stable systems and confident users', desc: 'Reducing recurring issues through better config.' }
+            ],
+            included: ['Profile configuration', 'Resolution of conflicts', 'Maintenance guidance'],
+            extraLabel: 'Best Fit For',
+            extraList: ['Correct config without trial & error', 'Onboarding new applications', 'Repeated issues that basic steps didn\'t fix'],
+            ctaTitle: 'Software not behaving?',
+            ctaDesc: 'We can install, configure, or troubleshoot the apps your work depends on.'
+        },
+        'enterprise-networking': {
+            category: 'Networking',
+            title: 'Enterprise Networking',
+            tags: ['Contact us for a quote'],
+            desc: 'Business networking environments supporting staff, devices, and cloud services with performance and stability.',
+            keyPoints: [
+                'Business-focused planning for offices and multi-user growth.',
+                'Traffic flow and firewall alignment.',
+                'Emphasis on long-term maintainability.'
+            ],
+            highlights: [
+                { label: 'Coverage', val: 'Switching, wireless, and firewall planning', desc: 'Supporting how users and services interact.' },
+                { label: 'Value', val: 'Reliable connectivity for critical systems', desc: 'Reducing daily friction and enabling growth.' }
+            ],
+            included: ['Switching & Routing design', 'Segmentation', 'Support for cable runs'],
+            extraLabel: 'Ideal Environments',
+            extraList: ['Offices with shared resources', 'Growth-oriented businesses', 'Modernizing undocumented networks'],
+            ctaTitle: 'Need a stronger network?',
+            ctaDesc: 'Assessment and delivery of a network that performs more reliably.'
+        },
+        'home-networking': {
+            category: 'Networking',
+            title: 'Home Networking',
+            tags: ['Starting At $50 for assessment and optimization guidance'],
+            desc: 'Improving home networking for streaming, work-from-home, gaming, and smart devices.',
+            keyPoints: [
+                'Solutions for dead zones and weak Wi-Fi.',
+                'Mesh system and access point placement.',
+                'Wired backhaul options for stability.'
+            ],
+            highlights: [
+                { label: 'Improvements', val: 'Coverage and device stability', desc: 'Consistency where you actually use it.' },
+                { label: 'Support', val: 'Mesh, security, and smart home', desc: 'Entertainment without daily frustration.' }
+            ],
+            included: ['Device load assessment', 'Mesh configuration', 'Security setup'],
+            extraLabel: 'Best Fit For',
+            extraList: ['Multi-floor homes with weak signal', 'Balancing streaming and work traffic', 'Guidance instead of guessing at hardware'],
+            ctaTitle: 'Tired of weak Wi-Fi?',
+            ctaDesc: 'Help improve performance throughout the home with practical changes.'
+        },
+        'voip-setup': {
+            category: 'Networking',
+            title: 'VoIP Setup & Installation',
+            tags: ['Contact us for a quote'],
+            desc: 'Modernizing business phone service with VoIP to improve call handling and support hybrid work.',
+            keyPoints: [
+                'Extensions, handsets, and call flow design.',
+                'Attention to voice quality and latency.',
+                'Low-disruption transition planning.'
+            ],
+            highlights: [
+                { label: 'Setup', val: 'Handsets, voicemail, and auto attendants', desc: 'Shaping a professional phone experience.' },
+                { label: 'Outcome', val: 'Clearer communication with less friction', desc: 'Making day-to-day talk easier for staff and clients.' }
+            ],
+            included: ['Call flow structure', 'Voicemail setup', 'Readiness audit'],
+            extraLabel: 'Best Fit For',
+            extraList: ['Replacing traditional analog lines', 'Teams needing remote work flexibility', 'Polished client communication'],
+            ctaTitle: 'Upgrading your phone system?',
+            ctaDesc: 'Plan a VoIP setup that is clear, professional, and easier to manage.'
+        }
+    };
+
+    window.openPanel = function(id) {
+        const data = serviceData[id];
+        if (!data) return;
+        history.replaceState(null, '', '?open=' + id);
+        const content = `
+            <div class="panel-category">${data.category}</div>
+            <h2 class="panel-title">${data.title}</h2>
+            <div class="panel-tags">
+                ${data.tags.map(t => `<span class="panel-tag">${t}</span>`).join('')}
+            </div>
+            <p class="panel-desc">${data.desc}</p>
+            <ul class="panel-list">
+                ${data.keyPoints.map(p => `<li>${p}</li>`).join('')}
+            </ul>
+            
+            <div class="panel-highlight-grid">
+                ${data.highlights.map(h => `
+                    <div class="panel-highlight">
+                        <span class="panel-highlight-label">${h.label}</span>
+                        <strong class="panel-highlight-value">${h.val}</strong>
+                        <p class="panel-highlight-desc">${h.desc}</p>
+                    </div>
+                `).join('')}
+            </div>
+
+            <h3 class="panel-section-title">What's Included</h3>
+            <ul class="panel-list">
+                ${data.included.map(i => `<li>${i}</li>`).join('')}
+            </ul>
+
+            <h3 class="panel-section-title">${data.extraLabel}</h3>
+            <ul class="panel-list">
+                ${data.extraList.map(e => `<li>${e}</li>`).join('')}
+            </ul>
+
+            <div class="panel-cta-box">
+                <h4>${data.ctaTitle}</h4>
+                <p>${data.ctaDesc}</p>
+                <a href="quote.html" class="services-action-btn primary">Contact Us</a>
+            </div>
+        `;
+        document.getElementById('panel-content').innerHTML = content;
+        document.getElementById('service-panel').classList.add('active');
+        document.getElementById('panel-overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    window.closePanel = function() {
+        document.getElementById('service-panel').classList.remove('active');
+        document.getElementById('panel-overlay').classList.remove('active');
+        document.body.style.overflow = 'auto';
+        history.replaceState(null, '', window.location.pathname);
+    }
+
+    // Auto-open panel from URL param (e.g. services.html?open=web-development)
+    const _autoOpen = new URLSearchParams(window.location.search).get('open');
+    if (_autoOpen && serviceData[_autoOpen]) setTimeout(() => openPanel(_autoOpen), 100);
+
+</script>
+
+</body>
+</html>

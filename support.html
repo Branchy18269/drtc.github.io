@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Portal | Done Right Tech Company</title>
+    <link rel="icon" href="../../images/favicon.png" type="image/png">
+    
+    <!-- External Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        *, ::before, ::after { box-sizing: border-box; }
+        * { border: 0; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #07080d;
+            --panel: rgba(255, 255, 255, 0.06);
+            --panel2: rgba(255, 255, 255, 0.08);
+            --text: rgba(255, 255, 255, 0.86);
+            --muted: rgba(255, 255, 255, 0.62);
+            --border: rgba(255, 255, 255, 0.12);
+            --shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+            --primary: #4facfe;
+            --primary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            font-optical-sizing: auto;
+            background: #07080d;
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex; 
+            flex-direction: column; 
+            position: relative;
+            z-index: 0;
+        }
+
+        /* Animated Ambient Background */
+        body::before {
+            content: ""; position: fixed; inset: -80px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.82) 0%, rgba(0,26,77,0.78) 50%, rgba(13,13,43,0.84) 100%);
+            pointer-events: none; z-index: -1; transform: translateZ(0);
+        }
+        body::after {
+            content: ""; position: fixed; top: 50%; left: 50%; width: 150vw; height: 150vh;
+            transform: translate(-50%, -50%);
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(79, 172, 254, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 42, 95, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(0, 242, 254, 0.1) 0%, transparent 50%);
+            pointer-events: none; z-index: -1; animation: drift 20s infinite alternate linear; mix-blend-mode: screen;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+            50% { transform: translate(-45%, -55%) rotate(10deg) scale(1.1); }
+            100% { transform: translate(-55%, -45%) rotate(-10deg) scale(0.9); }
+        }
+
+        button, input, textarea, select { font-family: inherit; font-size: 100%; color: inherit; background: transparent; }
+        a { color: inherit; text-decoration: none; }
+        a:focus-visible, button:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+        
+        .skip-link {
+            position: absolute; top: -100px; left: 16px; z-index: 1000; padding: 12px 20px;
+            background: var(--primary); color: #000; font-weight: 700; border-radius: 8px; transition: top 0.2s ease;
+        }
+        .skip-link:focus { top: 16px; }
+
+        /* ================= NEW NAVBAR ================= */
+        .site-header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(7, 8, 13, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border); transition: all 0.3s ease;
+        }
+        .site-header.scrolled { padding: 5px 0; background: rgba(7, 8, 13, 0.98); }
+        
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 15px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-brand img { max-height: 45px; width: auto; display: block; filter: drop-shadow(0 0 10px rgba(79, 172, 254, 0.2)); }
+        
+        .main-nav { display: flex; align-items: center; gap: 30px; }
+        .nav-list { display: flex; align-items: center; gap: 20px; list-style: none; margin: 0; padding: 0; }
+        .nav-link {
+            color: var(--text); font-weight: 500; font-size: 15px; display: flex; align-items: center; gap: 6px;
+            padding: 10px 15px; border-radius: 8px; transition: all 0.2s ease; cursor: pointer;
+        }
+        .nav-link:hover, .nav-link.active { color: #fff; background: var(--panel); }
+
+        .nav-item-dropdown { position: relative; }
+        .dropdown-menu {
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(15px);
+            background: #11141e; border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow);
+            opacity: 0; visibility: hidden; transition: all 0.3s ease; pointer-events: none;
+            padding: 24px; display: flex; gap: 40px; min-width: 600px;
+        }
+        .nav-item-dropdown::after { content: ''; position: absolute; top: 100%; left: 0; width: 100%; height: 20px; }
+        .nav-item-dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+
+        .mega-column h4 {
+            font-family: 'Sora', sans-serif; font-size: 0.9rem; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px;
+        }
+        .mega-column h4 a { color: var(--primary); transition: color 0.2s ease; }
+        .mega-column h4 a:hover { color: #fff; }
+        .mega-column > a { display: block; color: var(--muted); font-size: 0.95rem; padding: 8px 0; transition: color 0.2s ease, transform 0.2s ease; }
+        .mega-column > a:hover { color: #fff; transform: translateX(3px); }
+
+        .nav-btn {
+            background: var(--primary-gradient); color: #000; padding: 10px 24px; border-radius: 50px;
+            font-weight: 700; transition: transform 0.2s, box-shadow 0.2s; border: none; display: inline-block; cursor: pointer; font-size: 15px;
+        }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3); color: #fff; }
+        .mobile-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; padding: 5px; }
+
+        @media (max-width: 960px) {
+            .mobile-toggle { display: block; }
+            .main-nav {
+                position: absolute; top: 100%; left: 0; width: 100%; background: #0b0d14; border-bottom: 1px solid var(--border);
+                flex-direction: column; align-items: flex-start; padding: 20px; gap: 15px; opacity: 0; visibility: hidden;
+                transform: translateY(-10px); transition: all 0.3s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            }
+            .main-nav.active { opacity: 1; visibility: visible; transform: translateY(0); }
+            .nav-list { flex-direction: column; width: 100%; align-items: flex-start; gap: 10px; }
+            .nav-list li { width: 100%; }
+            .nav-link { width: 100%; justify-content: space-between; }
+            .dropdown-menu {
+                position: static; transform: none; width: 100%; min-width: auto; background: transparent; border: none;
+                box-shadow: none; flex-direction: column; gap: 20px; padding: 10px 15px; display: none;
+            }
+            .nav-item-dropdown.mobile-open .dropdown-menu { display: flex; opacity: 1; visibility: visible; pointer-events: auto; }
+            .nav-item-dropdown:hover .dropdown-menu { transform: none; }
+            .nav-actions { width: 100%; display: flex; justify-content: center; margin-top: 10px; }
+        }
+
+        /* ================= SUPPORT PAGE CONTENT ================= */
+        .support-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 140px 20px 80px;
+        }
+
+        .support-box {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(79, 172, 254, 0.2);
+            border-radius: 24px;
+            padding: 60px 40px;
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeUp 0.8s ease-out forwards;
+        }
+
+        .support-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+        }
+
+        /* The Spinning Gear */
+        .gear-icon {
+            color: var(--primary);
+            margin-bottom: 24px;
+            display: inline-block;
+            filter: drop-shadow(0 0 15px rgba(79, 172, 254, 0.4));
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 8s linear infinite;
+        }
+
+        .support-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.2rem;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        .support-desc {
+            color: var(--muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .support-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .support-btn {
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: #000;
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(79, 172, 254, 0.5);
+            color: #fff;
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .support-box { padding: 40px 20px; }
+            .support-title { font-size: 1.8rem; }
+            .support-actions { flex-direction: column; }
+            .support-btn { width: 100%; justify-content: center; }
+        }
+        /* ================= FOOTER (from index.html) ================= */
+        .site-footer {
+            margin-top: auto; padding: 28px 20px 18px; color: var(--muted); font-size: 14px;
+            border-top: 1px solid var(--border); background: linear-gradient(180deg, rgba(6, 10, 18, 0.78), rgba(2, 5, 10, 0.94));
+        }
+        .footer-grid { max-width: 1320px; margin: auto; display: grid; grid-template-columns: minmax(0, 1.15fr) repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
+        .footer-col {
+            background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 10px; transition: transform 0.4s, box-shadow 0.4s;
+        }
+        .footer-col:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(79, 172, 254, 0.15); border-color: rgba(79, 172, 254, 0.3); }
+        .footer-col h4 { font-family: 'Sora', sans-serif; color: #fff; font-size: 0.9rem; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.45px; }
+        .footer-link-group { display: grid; gap: 10px; }
+
+        .footer-link {
+            display: inline-flex; align-items: center; gap: 10px; color: rgba(255, 255, 255, 0.7);
+            transition: color 0.18s ease, transform 0.18s ease; text-decoration: none;
+        }
+        .footer-link i {
+            width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 9px; background: linear-gradient(135deg, rgba(79, 172, 254, 0.22), rgba(0, 242, 254, 0.08));
+            border: 1px solid rgba(79, 172, 254, 0.24); box-shadow: inset 0 0 18px rgba(79, 172, 254, 0.08); color: #fff; font-size: 0.92rem; flex-shrink: 0;
+        }
+        .footer-link:hover { color: #fff; transform: translateX(4px); }
+
+        .footer-bottom {
+            max-width: 1320px; margin: 14px auto 0; padding-top: 12px; display: flex; justify-content: space-between;
+            gap: 12px; align-items: flex-end; color: var(--muted); font-size: 13px; border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 980px) { .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 640px) {
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; align-items: flex-start; text-align: left; }
+        }
+
+        
+        @media (max-width: 768px) {
+            
+        }
+    </style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- ================= NAVIGATION BAR ================= -->
+<header class="site-header" id="siteHeader">
+    <div class="nav-container">
+        <a class="nav-brand" href="index.html">
+            <img src="images/DRTC-Logo.png" onerror="this.onerror=null; this.src='https://placehold.co/380x100/07080d/4facfe?text=DRTC+Tech';" alt="DRTC Logo">
+        </a>
+
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="main-nav" id="mainNav">
+            <ul class="nav-list">
+                <li><a class="nav-link" href="index.html">Home</a></li>
+                <li><a class="nav-link" href="about.html">About Us</a></li>
+                
+                <!-- Mega Menu Dropdown -->
+                <li class="nav-item-dropdown">
+                    <a class="nav-link" href="services.html" id="servicesToggle">
+                        Services <i class="fa-solid fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="mega-column">
+                            <h4><a href="services.html#ds-main">Digital</a></h4>
+                            <a href="services.html?open=web-development">Web Development</a>
+                            <a href="services.html?open=infrastructure-hosting">Cloud Hosting</a>
+                            <a href="services.html?open=server-configuration">Server Config</a>
+                        </div>
+                        <div class="mega-column">
+                            <h4><a href="services.html#rs-main">Residential</a></h4>
+                            <a href="services.html?open=pc-building">PC Building</a>
+                            <a href="services.html?open=hardware-support">Hardware Repair</a>
+                            <a href="services.html?open=software-support">Software Support</a>
+                        </div>
+                        <div class="mega-column">
+                            <h4><a href="services.html#en-main">Networking</a></h4>
+                            <a href="services.html?open=enterprise-networking">Enterprise Networks</a>
+                            <a href="services.html?open=home-networking">Home Networking</a>
+                            <a href="services.html?open=voip-setup">VoIP Setup</a>
+                        </div>
+                    </div>
+                </li>
+
+                <li><a class="nav-link active" href="support.html">Support</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="contact.html" class="nav-btn">Contact Us</a>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<!-- ================= MAIN CONTENT START ================= -->
+<main id="main-content" class="support-container">
+
+    <div class="support-box">
+        
+        <!-- Animated Gear Icon -->
+        <div class="gear-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="animate-spin-slow">
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                <circle cx="12" cy="12" r="3"/>
+            </svg>
+        </div>
+
+        <h1 class="support-title">We'll be right back</h1>
+        <p class="support-desc">We are currently performing some scheduled maintenance to improve our systems. We'll be back online shortly. Thank you for your patience!</p>
+        
+        <p class="support-desc" style="font-size: 0.95rem; margin-top: -16px;">If you require immediate technical assistance, please do not hesitate to contact our team directly by phone or email.</p>
+
+        <div class="support-actions">
+            <a href="tel:+19029200180" class="support-btn btn-primary"><i class="fa-solid fa-phone"></i> Call (902) 920-0180</a>
+            <a href="mailto:contact@drtc.net" class="support-btn btn-outline"><i class="fa-solid fa-envelope"></i> Email Support</a>
+        </div>
+    </div>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>Company</h4>
+            <div class="footer-link-group">
+                <a href="index.html" class="footer-link"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="about.html" class="footer-link"><i class="fa-solid fa-circle-info"></i> About Us</a>
+                <a href="contact.html" class="footer-link"><i class="fa-solid fa-envelope"></i> Contact Us</a>
+                <a href="quote.html" class="footer-link"><i class="fa-solid fa-file-invoice-dollar"></i> Request a Quote</a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <h4>Support</h4>
+            <div class="footer-link-group">
+                <a href="support.html" class="footer-link"><i class="fa-solid fa-headset"></i> Support Portal</a>
+                <a href="quote.html" class="footer-link"><i class="fa-solid fa-paper-plane"></i> Submit a Request</a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <h4>Social</h4>
+            <div class="footer-link-group">
+                <a href="https://www.instagram.com/donerighttechco" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="https://x.com/donerighttechco" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-x-twitter"></i> X</a>
+                <a href="https://www.tiktok.com/@donerighttechco" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+                <a href="https://bsky.app/profile/done-righttechco.bsky.social" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-bluesky"></i> BlueSky</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 Done Right Tech Company. All rights reserved.</p>
+        <p class="footer-note">Hosted by IIS &middot; Made by Done Right Tech Company</p>
+    </div>
+</footer>
+
+<script>
+    // 1. NAVBAR LOGIC
+    (() => {
+        const header = document.getElementById("siteHeader");
+        const mobileToggle = document.getElementById("mobileToggle");
+        const mainNav = document.getElementById("mainNav");
+        const servicesToggle = document.getElementById("servicesToggle");
+        const dropdownParent = servicesToggle.parentElement;
+
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 20) header.classList.add("scrolled");
+            else header.classList.remove("scrolled");
+        });
+
+        mobileToggle.addEventListener("click", (e) => {
+            e.stopPropagation();
+            mainNav.classList.toggle("active");
+            const icon = mobileToggle.querySelector('i');
+            if (mainNav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        servicesToggle.addEventListener("click", (e) => {
+            if (window.innerWidth <= 960) {
+                e.preventDefault();
+                dropdownParent.classList.toggle("mobile-open");
+            }
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!header.contains(e.target) && mainNav.classList.contains("active")) {
+                mainNav.classList.remove("active");
+                mobileToggle.querySelector('i').classList.replace('fa-xmark', 'fa-bars');
+                dropdownParent.classList.remove("mobile-open");
+            }
+        });
+    })();
+</script>
+
+</body>
+</html>
