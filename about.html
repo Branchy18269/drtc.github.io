@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Done Right Tech Company</title>
+    
+    <!-- External Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        /* ========================================================
+           CORE SITE STYLES
+           ======================================================== */
+        *, ::before, ::after { box-sizing: border-box; }
+        * { border: 0; margin: 0; padding: 0; }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            font-optical-sizing: auto;
+            background: #07080d;
+            color: rgba(255, 255, 255, 0.86);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: -80px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.82) 0%, rgba(0,26,77,0.78) 50%, rgba(13,13,43,0.84) 100%);
+            pointer-events: none;
+            z-index: -1;
+            transform: translateZ(0);
+        }
+
+        /* Ambient Background Orbs */
+        body::after {
+            content: ""; position: fixed; top: 50%; left: 50%; width: 150vw; height: 150vh;
+            transform: translate(-50%, -50%);
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(79, 172, 254, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 42, 95, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(0, 242, 254, 0.1) 0%, transparent 50%);
+            pointer-events: none; z-index: -1; animation: drift 20s infinite alternate linear; mix-blend-mode: screen;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+            50% { transform: translate(-45%, -55%) rotate(10deg) scale(1.1); }
+            100% { transform: translate(-55%, -45%) rotate(-10deg) scale(0.9); }
+        }
+
+        button, input, textarea, select { font-family: inherit; font-size: 100%; color: inherit; background: transparent; }
+        a { color: inherit; text-decoration: none; }
+        a:focus-visible, button:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+        
+        .skip-link {
+            position: absolute; top: -100px; left: 16px; z-index: 1000;
+            padding: 12px 20px; background: var(--primary); color: #000;
+            font-weight: 700; border-radius: 8px; transition: top 0.2s ease;
+        }
+        .skip-link:focus { top: 16px; }
+
+        /* --- THEME VARIABLES --- */
+        :root {
+            --bg: #07080d;
+            --panel: rgba(255, 255, 255, 0.06);
+            --panel-hover: rgba(255, 255, 255, 0.12);
+            --text: rgba(255, 255, 255, 0.86);
+            --muted: rgba(255, 255, 255, 0.62);
+            --border: rgba(255, 255, 255, 0.12);
+            --shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+            --primary: #4facfe;
+            --primary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        /* ================= NEW NAVBAR (DESKTOP & MOBILE) ================= */
+        .site-header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(7, 8, 13, 0.85);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border); transition: all 0.3s ease;
+        }
+        .site-header.scrolled { padding: 5px 0; background: rgba(7, 8, 13, 0.98); }
+        
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 15px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-brand img { max-height: 45px; width: auto; display: block; }
+        .main-nav { display: flex; align-items: center; gap: 30px; }
+        .nav-list { display: flex; align-items: center; gap: 20px; list-style: none; margin: 0; padding: 0; }
+        .nav-link {
+            color: var(--text); font-weight: 500; font-size: 15px; display: flex; align-items: center; gap: 6px;
+            padding: 10px 15px; border-radius: 8px; transition: all 0.2s ease; cursor: pointer;
+        }
+        .nav-link:hover, .nav-link.active { color: #fff; background: var(--panel); }
+
+        /* Mega Menu Dropdown */
+        .nav-item-dropdown { position: relative; }
+        .dropdown-menu {
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(15px);
+            background: #11141e; border: 1px solid var(--border); border-radius: 16px;
+            box-shadow: var(--shadow); opacity: 0; visibility: hidden; transition: all 0.3s ease;
+            pointer-events: none; padding: 24px; display: flex; gap: 40px; min-width: 600px;
+        }
+        .nav-item-dropdown::after { content: ''; position: absolute; top: 100%; left: 0; width: 100%; height: 20px; }
+        .nav-item-dropdown:hover .dropdown-menu {
+            opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); pointer-events: auto;
+        }
+        .mega-column h4 {
+            color: var(--primary); font-family: 'Sora', sans-serif; font-size: 0.9rem;
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px;
+        }
+        .mega-column a { display: block; color: var(--muted); font-size: 0.95rem; padding: 8px 0; transition: color 0.2s ease; }
+        .mega-column a:hover { color: #fff; transform: translateX(3px); }
+
+        .nav-btn {
+            background: var(--primary-gradient); color: #000; padding: 10px 24px; border-radius: 50px;
+            font-weight: 700; transition: transform 0.2s; border: none; display: inline-block; cursor: pointer; font-size: 15px;
+        }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3); color: #fff; }
+
+        .mobile-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; padding: 5px; }
+
+        @media (max-width: 960px) {
+            .mobile-toggle { display: block; }
+            .main-nav {
+                position: absolute; top: 100%; left: 0; width: 100%; background: #0b0d14; border-bottom: 1px solid var(--border);
+                flex-direction: column; align-items: flex-start; padding: 20px; gap: 15px; opacity: 0; visibility: hidden;
+                transform: translateY(-10px); transition: all 0.3s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            }
+            .main-nav.active { opacity: 1; visibility: visible; transform: translateY(0); }
+            .nav-list { flex-direction: column; width: 100%; align-items: flex-start; gap: 10px; }
+            .nav-list li { width: 100%; }
+            .nav-link { width: 100%; justify-content: space-between; }
+            .dropdown-menu {
+                position: static; transform: none; width: 100%; min-width: auto; background: transparent; border: none;
+                box-shadow: none; flex-direction: column; gap: 20px; padding: 10px 15px; display: none;
+            }
+            .nav-item-dropdown.mobile-open .dropdown-menu { display: flex; opacity: 1; visibility: visible; pointer-events: auto; }
+            .nav-item-dropdown:hover .dropdown-menu { transform: none; }
+            .mega-column h4 { margin-bottom: 10px; font-size: 0.85rem; }
+            .nav-actions { width: 100%; display: flex; justify-content: center; margin-top: 10px; }
+        }
+
+        /* ================= ABOUT PAGE CONTENT ================= */
+        .page-content { flex: 1; padding-top: 100px; display: flex; flex-direction: column; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
+        
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        h1, h2, h3 { font-family: 'Sora', sans-serif; color: #fff; line-height: 1.2; text-shadow: 0 0 40px rgba(79, 172, 254, 0.35); }
+        p { color: rgba(255, 255, 255, 0.85); line-height: 1.7; font-size: 1.05rem; }
+
+        /* HERO */
+        .about-hero { padding: 60px 0; text-align: center; position: relative; }
+        .about-hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem); margin: 0 auto 20px;
+            background: linear-gradient(135deg, #fff 30%, #a5b4fc 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;
+        }
+        .about-hero .subtitle {
+            font-size: clamp(1rem, 2vw, 1.2rem); color: var(--primary); text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 16px; font-weight: 700; display: block;
+        }
+        .about-hero p { max-width: 700px; margin: 0 auto; font-size: 1.15rem; }
+
+        /* MISSION */
+        .mission-section { padding: 60px 0; }
+        .mission-box {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 60px 40px;
+            text-align: center; position: relative; overflow: hidden; backdrop-filter: blur(16px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        .mission-box::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 150px; height: 3px; background: var(--primary-gradient);
+        }
+        .mission-box h2 { font-size: 2.5rem; margin-bottom: 24px; }
+        .mission-box p { max-width: 800px; margin: 0 auto 24px; }
+
+        /* STATS */
+        .stats-section { padding: 40px 0 80px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; }
+        .stat-card {
+            background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+            padding: 2px; position: relative; overflow: hidden; text-align: center;
+        }
+        .stat-card::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, rgba(79, 172, 254, 0.4), transparent 30%);
+            animation: rotateGlow 6s linear infinite; opacity: 0; transition: opacity 0.3s;
+        }
+        .stat-card:hover::before { opacity: 1; }
+        @keyframes rotateGlow { 100% { transform: rotate(1turn); } }
+        .stat-inner {
+            background: var(--bg); position: relative; border-radius: 14px; z-index: 1;
+            padding: 40px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .stat-num-wrapper { display: flex; align-items: baseline; justify-content: center; gap: 2px; margin-bottom: 8px; }
+        .stat-num {
+            font-family: 'Sora', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1;
+            background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .stat-suffix { font-family: 'Sora', sans-serif; font-size: 2.2rem; color: var(--primary); font-weight: 700; line-height: 1; }
+        .stat-label { color: var(--muted); font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* VALUES */
+        .values-section { padding: 80px 0; background: rgba(0,0,0,0.3); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .section-header { text-align: center; max-width: 800px; margin: 0 auto 60px; }
+        .section-header h2 { font-size: 2.5rem; margin-bottom: 16px; }
+        .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .value-card {
+            background: var(--panel); border: 1px solid var(--border); border-radius: 20px;
+            padding: 40px 30px; position: relative; overflow: hidden; transition: all 0.3s ease;
+        }
+        .value-card:hover {
+            background: var(--panel-hover); transform: translateY(-5px);
+            border-color: rgba(79, 172, 254, 0.3); box-shadow: 0 15px 35px rgba(79, 172, 254, 0.15);
+        }
+        .icon-box {
+            width: 60px; height: 60px; background: rgba(79, 172, 254, 0.1); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 24px; color: var(--primary); font-size: 24px;
+        }
+        .value-card h3 { font-size: 1.5rem; margin-bottom: 12px; }
+        
+        /* TEAM */
+        .team-section { padding: 80px 0; }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .team-card {
+            background: var(--panel); border: 1px solid var(--border); border-radius: 20px;
+            padding: 30px 20px; text-align: center; transition: all 0.3s ease;
+        }
+        .team-card:hover { transform: translateY(-5px); background: var(--panel-hover); border-color: rgba(255,255,255,0.2); }
+        .team-img {
+            width: 120px; height: 120px; border-radius: 50%; background: #111; margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: #555;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        .team-role { color: var(--primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700; line-height: 1.4; }
+        .team-name { font-size: 1.3rem; margin-bottom: 12px; }
+        .team-bio { font-size: 0.95rem; }
+
+        /* CTA BOX */
+        .cta-section { padding: 40px 0 80px; text-align: center; }
+        .cta-box {
+            background: linear-gradient(180deg, rgba(79, 172, 254, 0.1) 0%, rgba(0,0,0,0) 100%);
+            border: 1px solid rgba(79, 172, 254, 0.3); border-radius: 24px; padding: 60px 20px; max-width: 900px; margin: auto;
+        }
+        .cta-btn {
+            display: inline-block; margin-top: 24px; padding: 16px 36px; background: var(--primary-gradient);
+            color: #000; font-weight: 800; border-radius: 50px; font-size: 1.1rem; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .cta-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4); color: #fff; }
+        /* ================= FOOTER (from index.html) ================= */
+        .site-footer {
+            margin-top: auto; padding: 28px 20px 18px; color: var(--muted); font-size: 14px;
+            border-top: 1px solid var(--border); background: linear-gradient(180deg, rgba(6, 10, 18, 0.78), rgba(2, 5, 10, 0.94));
+        }
+        .footer-grid { max-width: 1320px; margin: auto; display: grid; grid-template-columns: minmax(0, 1.15fr) repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
+        .footer-col {
+            background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 10px; transition: transform 0.4s, box-shadow 0.4s;
+        }
+        .footer-col:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(79, 172, 254, 0.15); border-color: rgba(79, 172, 254, 0.3); }
+        .footer-col h4 { font-family: 'Sora', sans-serif; color: #fff; font-size: 0.9rem; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.45px; }
+        .footer-link-group { display: grid; gap: 10px; }
+
+        .footer-link {
+            display: inline-flex; align-items: center; gap: 10px; color: rgba(255, 255, 255, 0.7);
+            transition: color 0.18s ease, transform 0.18s ease; text-decoration: none;
+        }
+        .footer-link i {
+            width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 9px; background: linear-gradient(135deg, rgba(79, 172, 254, 0.22), rgba(0, 242, 254, 0.08));
+            border: 1px solid rgba(79, 172, 254, 0.24); box-shadow: inset 0 0 18px rgba(79, 172, 254, 0.08); color: #fff; font-size: 0.92rem; flex-shrink: 0;
+        }
+        .footer-link:hover { color: #fff; transform: translateX(4px); }
+
+        .footer-bottom {
+            max-width: 1320px; margin: 14px auto 0; padding-top: 12px; display: flex; justify-content: space-between;
+            gap: 12px; align-items: flex-end; color: var(--muted); font-size: 13px; border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 980px) { .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 640px) {
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; align-items: flex-start; text-align: left; }
+        }
+
+        
+        @media (max-width: 768px) {
+            .mission-box { padding: 40px 20px; }
+            .about-hero h1 { font-size: 2.5rem; }
+            
+        }
+    </style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- ================= NAVIGATION BAR ================= -->
+<header class="site-header" id="siteHeader">
+    <div class="nav-container">
+        <a class="nav-brand" href="index.html">
+            <!-- Static placeholder logo -->
+            <img src="images/DRTC-Logo.png" onerror="this.onerror=null; this.src='https://placehold.co/380x100/07080d/4facfe?text=DRTC+Tech';" alt="DRTC Logo">
+        </a>
+
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="main-nav" id="mainNav">
+            <ul class="nav-list">
+                <li><a class="nav-link" href="index.html">Home</a></li>
+                <li><a class="nav-link active" href="about.html">About Us</a></li>
+                
+                <!-- Mega Menu Dropdown -->
+                <li class="nav-item-dropdown">
+                    <a class="nav-link" href="services.html" id="servicesToggle">
+                        Services <i class="fa-solid fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="mega-column">
+                            <h4>Digital</h4>
+                            <a href="services.html?open=web-development">Web Development</a>
+                            <a href="services.html?open=infrastructure-hosting">Cloud Hosting</a>
+                            <a href="services.html?open=server-configuration">Server Config</a>
+                        </div>
+                        <div class="mega-column">
+                            <h4>Residential</h4>
+                            <a href="services.html?open=pc-building">PC Building</a>
+                            <a href="services.html?open=hardware-support">Hardware Repair</a>
+                            <a href="services.html?open=software-support">Software Support</a>
+                        </div>
+                        <div class="mega-column">
+                            <h4>Networking</h4>
+                            <a href="services.html?open=enterprise-networking">Enterprise Networks</a>
+                            <a href="services.html?open=home-networking">Home Networking</a>
+                            <a href="services.html?open=voip-setup">VoIP Setup</a>
+                        </div>
+                    </div>
+                </li>
+
+                <li><a class="nav-link" href="support.html">Support</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="contact.html" class="nav-btn">Contact Us</a>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<!-- ================= MAIN CONTENT ================= -->
+<main class="page-content" id="main-content">
+    
+    <!-- HERO -->
+    <section class="about-hero reveal">
+        <div class="container">
+            <span class="subtitle reveal delay-100">Who We Are</span>
+            <h1 class="reveal delay-200">Technology Done Right,<br>Every Single Time.</h1>
+            <p class="reveal delay-300">
+                We bridge the gap between complex enterprise infrastructure and residential simplicity. 
+                Whether you need a custom PC, a secure server, or a complete network overhaul, we build it to last.
+            </p>
+        </div>
+    </section>
+
+    <!-- MISSION -->
+    <section class="mission-section reveal">
+        <div class="container">
+            <div class="mission-box">
+                <h2>Our Mission</h2>
+                <p>
+                    At Done Right Tech Company, we believe that technology should be an asset, not a hurdle. Founded on the principles of transparency and technical excellence, we set out to provide IT services that people can actually understand and trust.
+                </p>
+                <p>
+                    Too often, tech support is impersonal, overpriced, or needlessly complicated. We exist to change that narrative by offering bespoke solutions that are tailored exactly to your needs—no upselling, no jargon, just results.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-section reveal">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-inner">
+                        <div class="stat-num-wrapper">
+                            <div class="stat-num" data-target="99">0</div><span class="stat-suffix">%</span>
+                        </div>
+                        <div class="stat-label">Uptime Delivered</div>
+                    </div>
+                </div>
+                <div class="stat-card reveal delay-100">
+                    <div class="stat-inner">
+                        <div class="stat-num-wrapper">
+                            <div class="stat-num" data-target="15">0</div><span class="stat-suffix">+</span>
+                        </div>
+                        <div class="stat-label">Satisfied Clients</div>
+                    </div>
+                </div>
+                <div class="stat-card reveal delay-200">
+                    <div class="stat-inner">
+                        <div class="stat-num-wrapper">
+                            <div class="stat-num" data-target="14">0</div><span class="stat-suffix">/7</span>
+                        </div>
+                        <div class="stat-label">Support Access</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VALUES -->
+    <section class="values-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>Why Choose Us?</h2>
+                <p>We don't just fix computers; we build relationships. Here is what defines our approach to every project.</p>
+            </div>
+            
+            <div class="values-grid">
+                <div class="value-card reveal delay-100">
+                    <div class="icon-box"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>Security First</h3>
+                    <p>From enterprise firewalls to home antivirus, we prioritize the security of your data above all else. We build systems that are safe by design.</p>
+                </div>
+
+                <div class="value-card reveal delay-200">
+                    <div class="icon-box"><i class="fa-solid fa-wrench"></i></div>
+                    <h3>Precision Engineering</h3>
+                    <p>Whether it's cable management or code, we sweat the small stuff. A job isn't done until it's done right—clean, efficient, and reliable.</p>
+                </div>
+
+                <div class="value-card reveal delay-300">
+                    <div class="icon-box"><i class="fa-solid fa-users"></i></div>
+                    <h3>Customer Focus</h3>
+                    <p>We speak your language. We explain the 'why' and 'how' behind our work so you feel empowered, not confused, by your technology.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEAM -->
+    <section class="team-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>Meet The Experts</h2>
+                <p>The minds behind the machines.</p>
+            </div>
+            
+            <div class="team-grid">
+                <!-- Team Member 1 -->
+                <div class="team-card reveal delay-100">
+                    <div class="team-img"><i class="fa-solid fa-user"></i></div>
+                    <div class="team-role">Founder, C.E.O. &<br>Head of Operations</div>
+                    <div class="team-name">Will Hyndman</div>
+                    <p class="team-bio">Proficient in technical support & server administration. Passionate about building a better world for everyone.</p>
+                </div>
+
+                <!-- Team Member 2 -->
+                <div class="team-card reveal delay-200">
+                    <div class="team-img"><i class="fa-solid fa-user"></i></div>
+                    <div class="team-role">Lead Web Developer</div>
+                    <div class="team-name">Andrew Veinotte</div>
+                    <p class="team-bio">Specializes in responsive web design and full-stack development. Passionate about creating seamless user experiences.</p>
+                </div>
+
+                <!-- Team Member 3 -->
+                <div class="team-card reveal delay-300">
+                    <div class="team-img"><i class="fa-solid fa-user"></i></div>
+                    <div class="team-role">Social Media / PR</div>
+                    <div class="team-name">Leland Jensen</div>
+                    <p class="team-bio">Manages social media presence and public relations for Done Right Tech Company.</p>
+                </div>
+
+                <!-- Team Member 4 -->
+                <div class="team-card reveal delay-100">
+                    <div class="team-img"><i class="fa-solid fa-user"></i></div>
+                    <div class="team-role">HR Manager</div>
+                    <div class="team-name">Chloe Rodgerson</div>
+                    <p class="team-bio">Manages all HR functions including recruitment, training, and employee relations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section reveal">
+        <div class="container">
+            <div class="cta-box">
+                <h2>Ready to Upgrade Your Tech?</h2>
+                <p>Whether it's for your home or your business, we have the expertise to get it done right. Let's start a conversation.</p>
+                <a href="contact.html" class="cta-btn">Get In Touch</a>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>Company</h4>
+            <div class="footer-link-group">
+                <a href="index.html" class="footer-link"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="about.html" class="footer-link"><i class="fa-solid fa-circle-info"></i> About Us</a>
+                <a href="contact.html" class="footer-link"><i class="fa-solid fa-envelope"></i> Contact Us</a>
+                <a href="quote.html" class="footer-link"><i class="fa-solid fa-file-invoice-dollar"></i> Request a Quote</a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <h4>Support</h4>
+            <div class="footer-link-group">
+                <a href="support.html" class="footer-link"><i class="fa-solid fa-headset"></i> Support Portal</a>
+                <a href="quote.html" class="footer-link"><i class="fa-solid fa-paper-plane"></i> Submit a Request</a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <h4>Social</h4>
+            <div class="footer-link-group">
+                <a href="https://www.instagram.com/donerighttechco" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="https://x.com/donerighttechco" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-x-twitter"></i> X</a>
+                <a href="https://www.tiktok.com/@donerighttechco" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+                <a href="https://bsky.app/profile/done-righttechco.bsky.social" target="_blank" rel="noopener" class="footer-link"><i class="fa-brands fa-bluesky"></i> BlueSky</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 Done Right Tech Company. All rights reserved.</p>
+        <p class="footer-note">Hosted by IIS &middot; Made by Done Right Tech Company</p>
+    </div>
+</footer>
+
+<script>
+    // =========================================
+    // UI LOGIC (Navbar, Scrolls, Stats)
+    // =========================================
+
+    // 1. NAVBAR LOGIC
+    (() => {
+        const header = document.getElementById("siteHeader");
+        const mobileToggle = document.getElementById("mobileToggle");
+        const mainNav = document.getElementById("mainNav");
+        const servicesToggle = document.getElementById("servicesToggle");
+        const dropdownParent = servicesToggle.parentElement;
+
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 20) header.classList.add("scrolled");
+            else header.classList.remove("scrolled");
+        });
+
+        mobileToggle.addEventListener("click", (e) => {
+            e.stopPropagation();
+            mainNav.classList.toggle("active");
+            const icon = mobileToggle.querySelector('i');
+            if (mainNav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        servicesToggle.addEventListener("click", (e) => {
+            if (window.innerWidth <= 960) {
+                e.preventDefault();
+                dropdownParent.classList.toggle("mobile-open");
+            }
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!header.contains(e.target) && mainNav.classList.contains("active")) {
+                mainNav.classList.remove("active");
+                mobileToggle.querySelector('i').classList.replace('fa-xmark', 'fa-bars');
+                dropdownParent.classList.remove("mobile-open");
+            }
+        });
+    })();
+
+    // 2. SCROLL REVEALS & STATS COUNTER
+    (() => {
+        const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Stat Counters
+                    const counters = entry.target.querySelectorAll('.stat-num');
+                    counters.forEach(counter => {
+                        if (!counter.classList.contains('counted')) {
+                            counter.classList.add('counted');
+                            const target = +counter.getAttribute('data-target');
+                            const duration = 2000;
+                            const step = target / (duration / 16);
+                            let current = 0;
+                            
+                            const updateCounter = () => {
+                                current += step;
+                                if (current < target) {
+                                    counter.innerText = Math.ceil(current);
+                                    requestAnimationFrame(updateCounter);
+                                } else {
+                                    counter.innerText = target;
+                                }
+                            };
+                            updateCounter();
+                        }
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    })();
+</script>
+
+</body>
+</html>
